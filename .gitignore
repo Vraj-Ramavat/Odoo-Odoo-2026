@@ -49,3 +49,4 @@ out/
 *.log
 Thumbs.db
 Desktop.ini
+ecosphere-ui-spec/
