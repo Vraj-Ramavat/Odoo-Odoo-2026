@@ -32,7 +32,7 @@
   --color-g-surface: var(--g-surface);
   --color-g-search: var(--g-search);
   --color-g-active: var(--g-active);
-  --font-sans: "Roboto", "Product Sans", system-ui, sans-serif;
+  --font-sans: "Google Sans", "Product Sans", "Roboto", system-ui, sans-serif;
 }
 
 :root {
@@ -71,7 +71,6 @@
   --bg-elevated: #ffffff;
 
   /* Accent — Google Blue */
-  --accent: var(--g-blue);
   --accent-light: var(--g-active);
   --accent-dark: #1557b0;
   --accent-glow: var(--g-active);
@@ -104,23 +103,36 @@
   --radius-xl: 16px;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-body {
-  font-family: var(--font-sans);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Form element font reset */
+  input, button, select, textarea {
+    font-family: inherit;
+  }
+
+  /* Recharts label reset to sans-serif */
+  svg text {
+    font-family: var(--font-sans) !important;
+  }
 }
 
 /* Scrollbar */

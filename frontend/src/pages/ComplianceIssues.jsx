@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { governanceAPI, coreAPI, authAPI } from '../api/client';
-
-const sevColors = { low: '#6b7280', medium: '#f59e0b', high: '#f97316', critical: '#ef4444' };
-const statusColors = { open: '#ef4444', in_progress: '#1a73e8', resolved: '#10b981', closed: '#6b7280' };
+import { governanceAPI, coreAPI } from '../api/client';
+import { PageHeader } from '../components/ecosphere/PageHeader';
+import { GCard } from '../components/ecosphere/GCard';
+import { StatusChip, toneForStatus } from '../components/ecosphere/StatusChip';
 
 export default function ComplianceIssues() {
   const [issues, setIssues] = useState([]);
@@ -31,7 +31,7 @@ export default function ComplianceIssues() {
   const handleCreate = async (e) => {
     e.preventDefault();
     try { await governanceAPI.createComplianceIssue({ ...form, department: form.department || null }); setShowModal(false); load(); }
-    catch (e) { alert('Error'); }
+    catch (e) { alert('Error reporting issue'); }
   };
 
   const handleStatusChange = async (id, newStatus) => {
@@ -39,83 +39,160 @@ export default function ComplianceIssues() {
     catch (e) { alert('Error updating status'); }
   };
 
-  if (loading) return <div className="page-container"><div className="loading-spinner"></div></div>;
+  if (loading) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <div className="w-10 h-10 border-2 border-white/10 border-t-emerald-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const overdueCount = issues.filter(i => i.is_overdue).length;
   const criticalCount = issues.filter(i => i.severity === 'critical').length;
 
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Compliance Issues</h1>
-          <p className="page-subtitle">Track and resolve compliance gaps</p>
-        </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Report Issue</button>
+    <div className="mx-auto max-w-[1400px]">
+      <PageHeader
+        title="Compliance Issues"
+        subtitle="Track and resolve compliance gaps"
+        actions={
+          <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Report Issue</button>
+        }
+      />
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <GCard className="text-center py-5">
+          <p className="text-2xl font-bold text-foreground">{issues.length}</p>
+          <p className="text-xs uppercase font-bold text-muted-foreground mt-0.5">Total Issues</p>
+        </GCard>
+        <GCard className="text-center py-5">
+          <p className="text-2xl font-bold text-[var(--g-red)]">{overdueCount}</p>
+          <p className="text-xs uppercase font-bold text-muted-foreground mt-0.5">Overdue</p>
+        </GCard>
+        <GCard className="text-center py-5">
+          <p className="text-2xl font-bold text-[var(--g-red)]">{criticalCount}</p>
+          <p className="text-xs uppercase font-bold text-muted-foreground mt-0.5">Critical</p>
+        </GCard>
+        <GCard className="text-center py-5">
+          <p className="text-2xl font-bold text-[var(--g-green)]">{issues.filter(i => i.status === 'resolved').length}</p>
+          <p className="text-xs uppercase font-bold text-muted-foreground mt-0.5">Resolved</p>
+        </GCard>
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: 24 }}>
-        <div className="stat-card"><div className="stat-value">{issues.length}</div><div className="stat-label">Total Issues</div></div>
-        <div className="stat-card"><div className="stat-value" style={{ color: '#ef4444' }}>{overdueCount}</div><div className="stat-label">Overdue</div></div>
-        <div className="stat-card"><div className="stat-value" style={{ color: '#ef4444' }}>{criticalCount}</div><div className="stat-label">Critical</div></div>
-        <div className="stat-card"><div className="stat-value" style={{ color: '#10b981' }}>{issues.filter(i => i.status === 'resolved').length}</div><div className="stat-label">Resolved</div></div>
-      </div>
-
-      <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-        <select className="form-input" style={{ width: 'auto' }} value={filters.severity} onChange={e => setFilters({...filters, severity: e.target.value})}>
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3 mb-6">
+        <select className="h-10 rounded-full border border-border bg-card px-4 text-xs font-semibold outline-none focus:ring-2 focus:ring-[var(--g-active)]" value={filters.severity} onChange={e => setFilters({...filters, severity: e.target.value})}>
           <option value="">All Severities</option>
-          <option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
         </select>
-        <select className="form-input" style={{ width: 'auto' }} value={filters.status} onChange={e => setFilters({...filters, status: e.target.value})}>
+        <select className="h-10 rounded-full border border-border bg-card px-4 text-xs font-semibold outline-none focus:ring-2 focus:ring-[var(--g-active)]" value={filters.status} onChange={e => setFilters({...filters, status: e.target.value})}>
           <option value="">All Statuses</option>
-          <option value="open">Open</option><option value="in_progress">In Progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option>
+          <option value="open">Open</option>
+          <option value="in_progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+          <option value="closed">Closed</option>
         </select>
-        <select className="form-input" style={{ width: 'auto' }} value={filters.department} onChange={e => setFilters({...filters, department: e.target.value})}>
+        <select className="h-10 rounded-full border border-border bg-card px-4 text-xs font-semibold outline-none focus:ring-2 focus:ring-[var(--g-active)]" value={filters.department} onChange={e => setFilters({...filters, department: e.target.value})}>
           <option value="">All Departments</option>
           {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
         </select>
       </div>
 
-      <div className="data-table-wrapper">
-        <table className="data-table">
-          <thead><tr><th style={{ width: 4 }}></th><th>Issue</th><th>Severity</th><th>Department</th><th>Owner</th><th>Due Date</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            {issues.map(i => (
-              <tr key={i.id} style={{ background: i.is_overdue ? '#ef444408' : undefined }}>
-                <td style={{ padding: 0, width: 4 }}><div style={{ width: 4, height: '100%', minHeight: 48, background: i.is_overdue ? '#ef4444' : i.severity === 'critical' ? '#ef4444' : 'transparent', borderRadius: '2px 0 0 2px' }}></div></td>
-                <td>
-                  <div style={{ fontWeight: 500 }}>{i.title}</div>
-                  {i.audit_title && <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Audit: {i.audit_title}</div>}
-                  {i.is_overdue && <span style={{ fontSize: 11, background: '#ef4444', color: '#fff', padding: '1px 8px', borderRadius: 4, fontWeight: 700, marginTop: 4, display: 'inline-block' }}>⚠ OVERDUE</span>}
-                </td>
-                <td><span style={{ background: sevColors[i.severity] + '22', color: sevColors[i.severity], padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 700, textTransform: 'uppercase' }}>{i.severity}</span></td>
-                <td>{i.department_name}</td>
-                <td style={{ fontSize: 13 }}>{i.assigned_to_name}</td>
-                <td style={{ fontSize: 13, color: i.is_overdue ? '#ef4444' : undefined, fontWeight: i.is_overdue ? 600 : 400 }}>{i.due_date || '—'}</td>
-                <td><span style={{ background: (statusColors[i.status] || '#6b7280') + '22', color: statusColors[i.status], padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600 }}>{i.status?.replace('_', ' ')}</span></td>
-                <td>
-                  {i.status === 'open' && <button className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: 11 }} onClick={() => handleStatusChange(i.id, 'in_progress')}>Start</button>}
-                  {i.status === 'in_progress' && <button className="btn btn-primary" style={{ padding: '4px 8px', fontSize: 11 }} onClick={() => handleStatusChange(i.id, 'resolved')}>Resolve</button>}
-                </td>
+      {/* Issues Table */}
+      <GCard padded={false}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead>
+              <tr className="border-b border-border bg-[var(--g-surface)] text-[11px] font-semibold uppercase text-muted-foreground">
+                <th className="py-3 pl-5 pr-2">Issue</th>
+                <th className="px-2 py-3">Severity</th>
+                <th className="px-2 py-3">Department</th>
+                <th className="px-2 py-3">Owner</th>
+                <th className="px-2 py-3">Due Date</th>
+                <th className="px-2 py-3">Status</th>
+                <th className="py-3 pl-2 pr-5 text-right">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {issues.map(i => (
+                <tr key={i.id} className={`border-b border-border last:border-0 hover:bg-[var(--g-surface)] transition-colors ${i.is_overdue ? 'bg-[color-mix(in_oklab,var(--g-red)_5%,white)]' : ''}`} style={i.is_overdue ? { boxShadow: 'inset 3px 0 0 0 var(--g-red)' } : undefined}>
+                  <td className="py-3 pl-5 pr-2">
+                    <div className="font-semibold text-foreground">{i.title}</div>
+                    {i.audit_title && <div className="text-xs text-muted-foreground mt-0.5">Audit: {i.audit_title}</div>}
+                    {i.is_overdue && <span className="bg-[var(--g-red)] text-white text-[9px] font-bold rounded px-1.5 py-0.5 mt-1 inline-block">⚠ OVERDUE</span>}
+                  </td>
+                  <td className="px-2 py-3">
+                    <StatusChip tone={toneForStatus(i.severity)}>
+                      {i.severity}
+                    </StatusChip>
+                  </td>
+                  <td className="px-2 py-3 text-muted-foreground">{i.department_name}</td>
+                  <td className="px-2 py-3 text-foreground">{i.assigned_to_name || '—'}</td>
+                  <td className={`px-2 py-3 text-xs ${i.is_overdue ? 'text-[var(--g-red)] font-semibold' : 'text-muted-foreground'}`}>{i.due_date || '—'}</td>
+                  <td className="px-2 py-3">
+                    <StatusChip tone={toneForStatus(i.status)}>
+                      {i.status?.replace('_', ' ')}
+                    </StatusChip>
+                  </td>
+                  <td className="py-3 pl-2 pr-5 text-right">
+                    {i.status === 'open' && (
+                      <button className="btn btn-secondary btn-sm" onClick={() => handleStatusChange(i.id, 'in_progress')}>
+                        Start
+                      </button>
+                    )}
+                    {i.status === 'in_progress' && (
+                      <button className="btn btn-primary btn-sm" onClick={() => handleStatusChange(i.id, 'resolved')}>
+                        Resolve
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </GCard>
 
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2 style={{ marginBottom: 16 }}>Report Compliance Issue</h2>
-            <form onSubmit={handleCreate}>
-              <div className="form-group"><label>Title</label><input className="form-input" required value={form.title} onChange={e => setForm({...form, title: e.target.value})} /></div>
-              <div className="form-group"><label>Description</label><textarea className="form-input" rows={3} value={form.description} onChange={e => setForm({...form, description: e.target.value})} /></div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div className="form-group"><label>Severity</label><select className="form-input" value={form.severity} onChange={e => setForm({...form, severity: e.target.value})}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></div>
-                <div className="form-group"><label>Department</label><select className="form-input" value={form.department} onChange={e => setForm({...form, department: e.target.value})}><option value="">—</option>{departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}</select></div>
+            <h2 className="text-base font-bold text-foreground mb-4">Report Compliance Issue</h2>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="form-label">Title</label>
+                <input className="form-input" required value={form.title} onChange={e => setForm({...form, title: e.target.value})} />
               </div>
-              <div className="form-group"><label>Due Date</label><input type="date" className="form-input" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} /></div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+              <div>
+                <label className="form-label">Description</label>
+                <textarea className="form-input" rows={3} value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="form-label">Severity</label>
+                  <select className="form-input form-select" value={form.severity} onChange={e => setForm({...form, severity: e.target.value})}>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="critical">Critical</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="form-label">Department</label>
+                  <select className="form-input form-select" value={form.department} onChange={e => setForm({...form, department: e.target.value})}>
+                    <option value="">—</option>
+                    {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="form-label">Due Date</label>
+                <input type="date" className="form-input" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} />
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Submit</button>
               </div>

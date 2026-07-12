@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { governanceAPI, coreAPI } from '../api/client';
-
-const statusColors = { scheduled: '#f59e0b', in_progress: '#1a73e8', completed: '#10b981' };
-const typeColors = { internal: '#8b5cf6', external: '#1a73e8' };
+import { PageHeader } from '../components/ecosphere/PageHeader';
+import { GCard } from '../components/ecosphere/GCard';
+import { StatusChip, toneForStatus } from '../components/ecosphere/StatusChip';
 
 export default function Audits() {
   const [audits, setAudits] = useState([]);
@@ -38,85 +38,170 @@ export default function Audits() {
   const handleCreate = async (e) => {
     e.preventDefault();
     try { await governanceAPI.createAudit({ ...form, department: form.department || null }); setShowModal(false); load(); }
-    catch (e) { alert('Error'); }
+    catch (e) { alert('Error scheduling audit'); }
   };
 
-  if (loading) return <div className="page-container"><div className="loading-spinner"></div></div>;
+  if (loading) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <div className="w-10 h-10 border-2 border-white/10 border-t-emerald-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Audits</h1>
-          <p className="page-subtitle">ESG audit management and findings</p>
-        </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Schedule Audit</button>
+    <div className="mx-auto max-w-[1400px]">
+      <PageHeader
+        title="Audits"
+        subtitle="ESG audit management and findings"
+        actions={
+          <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Schedule Audit</button>
+        }
+      />
+
+      {/* Stats row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <GCard className="text-center py-5">
+          <p className="text-2xl font-bold text-foreground">{audits.length}</p>
+          <p className="text-xs uppercase font-bold text-muted-foreground mt-0.5">Total Audits</p>
+        </GCard>
+        <GCard className="text-center py-5">
+          <p className="text-2xl font-bold text-[var(--g-green)]">{audits.filter(a => a.status === 'completed').length}</p>
+          <p className="text-xs uppercase font-bold text-muted-foreground mt-0.5">Completed</p>
+        </GCard>
+        <GCard className="text-center py-5">
+          <p className="text-2xl font-bold text-[var(--g-blue)]">{audits.filter(a => a.status === 'in_progress').length}</p>
+          <p className="text-xs uppercase font-bold text-muted-foreground mt-0.5">In Progress</p>
+        </GCard>
       </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: 24 }}>
-        <div className="stat-card"><div className="stat-value">{audits.length}</div><div className="stat-label">Total Audits</div></div>
-        <div className="stat-card"><div className="stat-value" style={{ color: '#10b981' }}>{audits.filter(a => a.status === 'completed').length}</div><div className="stat-label">Completed</div></div>
-        <div className="stat-card"><div className="stat-value" style={{ color: '#1a73e8' }}>{audits.filter(a => a.status === 'in_progress').length}</div><div className="stat-label">In Progress</div></div>
-      </div>
-
-      <div className="data-table-wrapper">
-        <table className="data-table">
-          <thead><tr><th></th><th>Audit</th><th>Type</th><th>Department</th><th>Auditor</th><th>Date</th><th>Status</th><th>Score</th><th>Issues</th></tr></thead>
-          <tbody>
-            {audits.map(a => (
-              <>
-                <tr key={a.id} onClick={() => toggleExpand(a.id)} style={{ cursor: 'pointer' }}>
-                  <td style={{ width: 30, fontSize: 12 }}>{expanded === a.id ? '▼' : '▶'}</td>
-                  <td style={{ fontWeight: 500 }}>{a.title}</td>
-                  <td><span style={{ background: (typeColors[a.audit_type] || '#6b7280') + '22', color: typeColors[a.audit_type], padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600 }}>{a.audit_type}</span></td>
-                  <td>{a.department_name}</td>
-                  <td>{a.auditor || '—'}</td>
-                  <td style={{ fontSize: 13 }}>{a.scheduled_date}</td>
-                  <td><span style={{ background: (statusColors[a.status] || '#6b7280') + '22', color: statusColors[a.status], padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600 }}>{a.status?.replace('_', ' ')}</span></td>
-                  <td style={{ fontWeight: 600 }}>{a.score || '—'}</td>
-                  <td><span style={{ background: a.issue_count > 0 ? '#ef444422' : '#10b98122', color: a.issue_count > 0 ? '#ef4444' : '#10b981', padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600 }}>{a.issue_count}</span></td>
-                </tr>
-                {expanded === a.id && (
-                  <tr key={`${a.id}-details`}>
-                    <td colSpan={9} style={{ background: 'var(--bg-secondary)', padding: 16 }}>
-                      {a.findings && <div style={{ marginBottom: 12 }}><strong>Findings:</strong> <span style={{ color: 'var(--text-secondary)' }}>{a.findings}</span></div>}
-                      {issues[a.id] && issues[a.id].length > 0 && (
-                        <div>
-                          <strong>Linked Issues:</strong>
-                          {issues[a.id].map(issue => (
-                            <div key={issue.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid var(--border-color)' }}>
-                              <span style={{ width: 4, height: 24, borderRadius: 2, background: issue.is_overdue ? '#ef4444' : issue.severity === 'critical' ? '#ef4444' : issue.severity === 'high' ? '#f59e0b' : '#6b7280' }}></span>
-                              <span style={{ fontWeight: 500 }}>{issue.title}</span>
-                              <span style={{ fontSize: 12, color: issue.severity === 'critical' ? '#ef4444' : '#6b7280' }}>[{issue.severity}]</span>
-                              <span style={{ fontSize: 12 }}>{issue.status}</span>
-                              {issue.is_overdue && <span style={{ fontSize: 11, background: '#ef444422', color: '#ef4444', padding: '1px 6px', borderRadius: 4, fontWeight: 600 }}>OVERDUE</span>}
+      {/* Table */}
+      <GCard padded={false}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead>
+              <tr className="border-b border-border bg-[var(--g-surface)] text-[11px] font-semibold uppercase text-muted-foreground">
+                <th className="py-3 pl-5 pr-2 w-10"></th>
+                <th className="px-2 py-3">Audit</th>
+                <th className="px-2 py-3">Type</th>
+                <th className="px-2 py-3">Department</th>
+                <th className="px-2 py-3">Auditor</th>
+                <th className="px-2 py-3">Date</th>
+                <th className="px-2 py-3">Status</th>
+                <th className="px-2 py-3 text-center">Score</th>
+                <th className="py-3 pl-2 pr-5 text-right">Issues</th>
+              </tr>
+            </thead>
+            <tbody>
+              {audits.map(a => {
+                const isExpanded = expanded === a.id;
+                return (
+                  <React.Fragment key={a.id}>
+                    <tr onClick={() => toggleExpand(a.id)} className="border-b border-border hover:bg-[var(--g-surface)] transition-colors cursor-pointer">
+                      <td className="py-3 pl-5 pr-2 font-medium text-muted-foreground text-center">
+                        {isExpanded ? '▼' : '▶'}
+                      </td>
+                      <td className="px-2 py-3 font-semibold text-foreground">{a.title}</td>
+                      <td className="px-2 py-3">
+                        <StatusChip tone={a.audit_type === 'internal' ? 'purple' : 'blue'}>
+                          {a.audit_type}
+                        </StatusChip>
+                      </td>
+                      <td className="px-2 py-3 text-muted-foreground">{a.department_name || 'Organization-wide'}</td>
+                      <td className="px-2 py-3 text-foreground">{a.auditor || '—'}</td>
+                      <td className="px-2 py-3 text-muted-foreground text-xs">{a.scheduled_date}</td>
+                      <td className="px-2 py-3">
+                        <StatusChip tone={toneForStatus(a.status)}>
+                          {a.status?.replace('_', ' ')}
+                        </StatusChip>
+                      </td>
+                      <td className="px-2 py-3 text-center font-bold text-foreground">{a.score || '—'}</td>
+                      <td className="py-3 pl-2 pr-5 text-right">
+                        <StatusChip tone={a.issue_count > 0 ? 'red' : 'green'}>
+                          {a.issue_count}
+                        </StatusChip>
+                      </td>
+                    </tr>
+                    {isExpanded && (
+                      <tr className="bg-[var(--g-surface)]">
+                        <td colSpan={9} className="p-5 border-b border-border">
+                          <div className="space-y-4">
+                            {a.findings && (
+                              <div>
+                                <span className="font-semibold text-xs text-muted-foreground block uppercase mb-1">Findings</span>
+                                <p className="text-sm text-foreground">{a.findings}</p>
+                              </div>
+                            )}
+                            <div>
+                              <span className="font-semibold text-xs text-muted-foreground block uppercase mb-2">Linked Compliance Issues</span>
+                              {issues[a.id] && issues[a.id].length > 0 ? (
+                                <div className="space-y-2 max-w-2xl">
+                                  {issues[a.id].map(issue => (
+                                    <div key={issue.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-card shadow-sm">
+                                      <div className="flex items-center gap-3">
+                                        <span className={`w-1.5 h-6 rounded-full ${issue.is_overdue || issue.severity === 'critical' ? 'bg-[var(--g-red)]' : issue.severity === 'high' ? 'bg-[var(--g-yellow)]' : 'bg-muted-foreground'}`} />
+                                        <div>
+                                          <p className="text-sm font-semibold text-foreground">{issue.title}</p>
+                                          {issue.is_overdue && <span className="bg-[var(--g-red)] text-white text-[9px] font-bold rounded px-1.5 py-0.5 mt-0.5 inline-block">⚠ OVERDUE</span>}
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <StatusChip tone={toneForStatus(issue.severity)}>{issue.severity}</StatusChip>
+                                        <StatusChip tone={toneForStatus(issue.status)}>{issue.status}</StatusChip>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="text-xs text-muted-foreground">No linked compliance issues found.</p>
+                              )}
                             </div>
-                          ))}
-                        </div>
-                      )}
-                      {(!issues[a.id] || issues[a.id].length === 0) && <p style={{ color: 'var(--text-muted)' }}>No linked compliance issues.</p>}
-                    </td>
-                  </tr>
-                )}
-              </>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </GCard>
 
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2 style={{ marginBottom: 16 }}>Schedule Audit</h2>
-            <form onSubmit={handleCreate}>
-              <div className="form-group"><label>Title</label><input className="form-input" required value={form.title} onChange={e => setForm({...form, title: e.target.value})} /></div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div className="form-group"><label>Type</label><select className="form-input" value={form.audit_type} onChange={e => setForm({...form, audit_type: e.target.value})}><option value="internal">Internal</option><option value="external">External</option></select></div>
-                <div className="form-group"><label>Department</label><select className="form-input" value={form.department} onChange={e => setForm({...form, department: e.target.value})}><option value="">Organization-wide</option>{departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}</select></div>
+            <h2 className="text-base font-bold text-foreground mb-4">Schedule Audit</h2>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="form-label">Title</label>
+                <input className="form-input" required value={form.title} onChange={e => setForm({...form, title: e.target.value})} />
               </div>
-              <div className="form-group"><label>Auditor</label><input className="form-input" value={form.auditor} onChange={e => setForm({...form, auditor: e.target.value})} /></div>
-              <div className="form-group"><label>Scheduled Date</label><input type="date" className="form-input" required value={form.scheduled_date} onChange={e => setForm({...form, scheduled_date: e.target.value})} /></div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="form-label">Type</label>
+                  <select className="form-input form-select" value={form.audit_type} onChange={e => setForm({...form, audit_type: e.target.value})}>
+                    <option value="internal">Internal</option>
+                    <option value="external">External</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="form-label">Department</label>
+                  <select className="form-input form-select" value={form.department} onChange={e => setForm({...form, department: e.target.value})}>
+                    <option value="">Organization-wide</option>
+                    {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="form-label">Auditor</label>
+                <input className="form-input" value={form.auditor} onChange={e => setForm({...form, auditor: e.target.value})} />
+              </div>
+              <div>
+                <label className="form-label">Scheduled Date</label>
+                <input type="date" className="form-input" required value={form.scheduled_date} onChange={e => setForm({...form, scheduled_date: e.target.value})} />
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Schedule</button>
               </div>

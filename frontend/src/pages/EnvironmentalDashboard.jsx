@@ -4,7 +4,9 @@ import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
-import { Leaf, TrendingDown, Factory, Zap, Droplets } from 'lucide-react';
+import { Leaf, TrendingDown, Factory, Zap, Droplets, Calendar } from 'lucide-react';
+import { PageHeader } from '../components/ecosphere/PageHeader';
+import { GCard } from '../components/ecosphere/GCard';
 
 const COLORS = ['var(--g-blue)', 'var(--g-green)', 'var(--g-purple)', 'var(--g-teal)', 'var(--g-yellow)', 'var(--g-red)'];
 const SCOPE_COLORS = { 'Scope 1': 'var(--g-red)', 'Scope 2': 'var(--g-blue)', 'Scope 3': 'var(--g-purple)' };
@@ -39,7 +41,7 @@ export default function EnvironmentalDashboard() {
   if (loading || !data) {
     return (
       <div className="flex h-[400px] items-center justify-center">
-        <div className="loading-spinner"></div>
+        <div className="w-10 h-10 border-2 border-white/10 border-t-emerald-500 rounded-full animate-spin" />
       </div>
     );
   }
@@ -54,24 +56,27 @@ export default function EnvironmentalDashboard() {
 
   return (
     <div className="mx-auto max-w-[1400px]">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Carbon emissions overview and trends
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {[{ v: 90, l: '90 Days' }, { v: 180, l: '6 Months' }, { v: 365, l: '1 Year' }].map(p => (
-            <button key={p.v}
-              className={`rounded-full px-4 py-1.5 text-xs font-semibold border transition-all ${
-                period === p.v
-                  ? 'bg-[var(--g-active)] border-[var(--g-blue)] text-[var(--g-blue)]'
-                  : 'bg-card border-border text-muted-foreground hover:bg-[var(--g-surface)]'
-              }`}
-              onClick={() => setPeriod(p.v)}>{p.l}</button>
-          ))}
-        </div>
-      </div>
+      <PageHeader
+        title="Environmental Dashboard"
+        subtitle="Carbon emissions overview and trends"
+        actions={
+          <div className="flex gap-2">
+            {[{ v: 90, l: '90 Days' }, { v: 180, l: '6 Months' }, { v: 365, l: '1 Year' }].map(p => (
+              <button
+                key={p.v}
+                className={`rounded-full px-4 py-1.5 text-xs font-semibold border transition-all ${
+                  period === p.v
+                    ? 'bg-[var(--g-active)] border-[var(--g-blue)] text-[var(--g-blue)]'
+                    : 'bg-card border-border text-muted-foreground hover:bg-[var(--g-surface)]'
+                }`}
+                onClick={() => setPeriod(p.v)}
+              >
+                {p.l}
+              </button>
+            ))}
+          </div>
+        }
+      />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -81,22 +86,22 @@ export default function EnvironmentalDashboard() {
           { icon: Zap, label: 'Scope 2 - Energy', value: `${(data.scope_2/1000).toFixed(1)} tCO₂e`, color: 'var(--g-blue)', sub: 'Electricity consumption' },
           { icon: Droplets, label: 'Scope 3 - Other', value: `${(data.scope_3/1000).toFixed(1)} tCO₂e`, color: 'var(--g-purple)', sub: 'Supply chain & business travel' },
         ].map((card) => (
-          <div key={card.label} className="glass-card p-5">
+          <GCard key={card.label}>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${card.color}14`, color: card.color }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--g-active)]" style={{ color: card.color }}>
                 <card.icon size={20} />
               </div>
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{card.label}</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{card.label}</span>
             </div>
-            <p className="text-3xl font-medium text-foreground tracking-tight">{card.value}</p>
+            <p className="text-3xl font-semibold text-foreground tracking-tight">{card.value}</p>
             {card.sub && <p className="text-[11px] text-muted-foreground mt-1">{card.sub}</p>}
-          </div>
+          </GCard>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Emissions Trend */}
-        <div className="glass-card p-5 lg:col-span-2 flex flex-col justify-between">
+        <GCard className="lg:col-span-2 flex flex-col justify-between">
           <div>
             <h3 className="text-sm font-semibold text-foreground">Emissions Trend</h3>
             <p className="text-xs text-muted-foreground mt-0.5">Historical carbon accounting timeline</p>
@@ -105,7 +110,7 @@ export default function EnvironmentalDashboard() {
             {data.by_month.length > 0 ? (
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={data.by_month}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis dataKey="month" tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} />
                   <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} tickFormatter={v => `${(v/1000).toFixed(0)}t`} />
                   <Tooltip content={<CustomTooltip />} />
@@ -120,10 +125,10 @@ export default function EnvironmentalDashboard() {
               </div>
             )}
           </div>
-        </div>
+        </GCard>
 
         {/* Scope Breakdown Pie */}
-        <div className="glass-card p-5 flex flex-col justify-between">
+        <GCard className="flex flex-col justify-between">
           <div>
             <h3 className="text-sm font-semibold text-foreground">Scope Breakdown</h3>
             <p className="text-xs text-muted-foreground mt-0.5">Distribution across Greenhouse Gas scopes</p>
@@ -145,12 +150,12 @@ export default function EnvironmentalDashboard() {
               <div className="flex items-center justify-center h-64 text-sm text-muted-foreground">No scope data</div>
             )}
           </div>
-        </div>
+        </GCard>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* By Department Bar Chart */}
-        <div className="glass-card p-5 lg:col-span-2 flex flex-col justify-between">
+        <GCard className="lg:col-span-2 flex flex-col justify-between">
           <div>
             <h3 className="text-sm font-semibold text-foreground">Emissions by Department</h3>
             <p className="text-xs text-muted-foreground mt-0.5">Breakdown of operational footprint</p>
@@ -159,7 +164,7 @@ export default function EnvironmentalDashboard() {
             {data.by_department.length > 0 ? (
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={data.by_department} layout="vertical" margin={{ left: 10 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis type="number" tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
                     tickFormatter={v => `${(v/1000).toFixed(1)}t`} />
                   <YAxis type="category" dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} width={120} />
@@ -175,12 +180,12 @@ export default function EnvironmentalDashboard() {
               <div className="flex items-center justify-center h-64 text-sm text-muted-foreground">No department data</div>
             )}
           </div>
-        </div>
+        </GCard>
 
         {/* Goals Summary + Quick Stats */}
         <div className="flex flex-col gap-6">
           {/* Goals Summary */}
-          <div className="glass-card p-5">
+          <GCard>
             <h3 className="text-sm font-semibold text-foreground mb-4">Goals Progress</h3>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -195,10 +200,10 @@ export default function EnvironmentalDashboard() {
                 </div>
               ))}
             </div>
-          </div>
+          </GCard>
 
           {/* Quick Stats */}
-          <div className="glass-card p-5">
+          <GCard>
             <h3 className="text-sm font-semibold text-foreground mb-4">Quick Stats</h3>
             <div className="space-y-2">
               <div className="flex justify-between items-center py-2.5 border-b border-border text-xs">
@@ -218,7 +223,7 @@ export default function EnvironmentalDashboard() {
                 </span>
               </div>
             </div>
-          </div>
+          </GCard>
         </div>
       </div>
     </div>
