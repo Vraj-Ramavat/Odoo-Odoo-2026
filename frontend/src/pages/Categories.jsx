@@ -82,8 +82,8 @@ export default function Categories() {
   );
 
   const typeColors = {
-    csr: { bg: 'rgba(59, 130, 246, 0.12)', color: 'var(--blue)' },
-    challenge: { bg: 'rgba(139, 92, 246, 0.12)', color: 'var(--purple)' },
+    csr: { bg: 'var(--scope2-bg)', color: 'var(--scope2-text)' },
+    challenge: { bg: 'var(--scope3-bg)', color: 'var(--scope3-text)' },
   };
 
   return (
@@ -123,8 +123,8 @@ export default function Categories() {
               className="btn btn-sm"
               style={{
                 background: filterType === opt.value ? 'var(--accent-glow)' : 'var(--bg-card)',
-                color: filterType === opt.value ? 'var(--accent-light)' : 'var(--text-secondary)',
-                border: `1px solid ${filterType === opt.value ? 'var(--accent)' : 'var(--border)'}`,
+                color: filterType === opt.value ? 'var(--badge-active-text)' : 'var(--text-primary)',
+                border: `1px solid ${filterType === opt.value ? 'var(--badge-active-border)' : 'var(--border)'}`,
               }}
               onClick={() => setFilterType(opt.value)}
             >

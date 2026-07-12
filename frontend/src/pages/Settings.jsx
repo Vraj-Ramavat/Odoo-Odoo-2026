@@ -128,9 +128,9 @@ export default function Settings() {
             <div className="p-3 rounded-lg text-sm font-medium"
               style={{
                 background: (parseFloat(config?.environmental_weight || 0) + parseFloat(config?.social_weight || 0) + parseFloat(config?.governance_weight || 0)) === 100
-                  ? 'rgba(16, 185, 129, 0.1)' : 'rgba(244, 63, 94, 0.1)',
+                  ? 'var(--badge-active-bg)' : 'var(--badge-danger-bg)',
                 color: (parseFloat(config?.environmental_weight || 0) + parseFloat(config?.social_weight || 0) + parseFloat(config?.governance_weight || 0)) === 100
-                  ? 'var(--accent-light)' : 'var(--rose)',
+                  ? 'var(--badge-active-text)' : 'var(--badge-danger-text)',
               }}>
               Total: {parseFloat(config?.environmental_weight || 0) + parseFloat(config?.social_weight || 0) + parseFloat(config?.governance_weight || 0)}%
               {(parseFloat(config?.environmental_weight || 0) + parseFloat(config?.social_weight || 0) + parseFloat(config?.governance_weight || 0)) !== 100 && ' (must be 100%)'}

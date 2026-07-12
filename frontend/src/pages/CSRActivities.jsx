@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { socialAPI, coreAPI } from '../api/client';
 
 const statusColors = {
-  draft: '#6b7280', active: '#1a73e8', completed: '#10b981', cancelled: '#ef4444',
+  draft: '#4b5563', active: '#1d4ed8', completed: '#047857', cancelled: '#b91c1c',
 };
 const partStatusColors = {
-  pending: '#f59e0b', approved: '#10b981', rejected: '#ef4444',
+  pending: '#92400e', approved: '#047857', rejected: '#b91c1c',
 };
 
 export default function CSRActivities() {

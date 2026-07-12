@@ -80,10 +80,10 @@ export default function EnvironmentalGoals() {
   };
 
   const statusConfig = {
-    on_track: { color: 'var(--accent)', bg: 'rgba(16, 185, 129, 0.12)', icon: TrendingUp, label: 'On Track' },
-    at_risk: { color: 'var(--amber)', bg: 'rgba(245, 158, 11, 0.12)', icon: AlertTriangle, label: 'At Risk' },
-    missed: { color: 'var(--rose)', bg: 'rgba(244, 63, 94, 0.12)', icon: AlertTriangle, label: 'Missed' },
-    achieved: { color: 'var(--accent-light)', bg: 'rgba(16, 185, 129, 0.2)', icon: CheckCircle, label: 'Achieved' },
+    on_track: { color: 'var(--badge-active-text)', bg: 'var(--badge-active-bg)', icon: TrendingUp, label: 'On Track' },
+    at_risk: { color: 'var(--badge-warning-text)', bg: 'var(--badge-warning-bg)', icon: AlertTriangle, label: 'At Risk' },
+    missed: { color: 'var(--badge-danger-text)', bg: 'var(--badge-danger-bg)', icon: AlertTriangle, label: 'Missed' },
+    achieved: { color: 'var(--value-text)', bg: 'var(--badge-active-bg)', icon: CheckCircle, label: 'Achieved' },
   };
 
   return (
@@ -120,9 +120,9 @@ export default function EnvironmentalGoals() {
             const sc = statusConfig[g.status] || statusConfig.on_track;
             const StatusIcon = sc.icon;
             const pct = g.progress_pct;
-            const barColor = g.status === 'achieved' ? 'var(--accent)' :
-              g.status === 'at_risk' ? 'var(--amber)' :
-              g.status === 'missed' ? 'var(--rose)' : 'var(--accent)';
+            const barColor = g.status === 'achieved' ? 'var(--g-green)' :
+              g.status === 'at_risk' ? 'var(--g-yellow)' :
+              g.status === 'missed' ? 'var(--g-red)' : 'var(--g-blue)';
 
             return (
               <div key={g.id} className="glass-card p-6 group">
