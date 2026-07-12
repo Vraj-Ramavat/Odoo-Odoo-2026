@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from 'react';
 import { governanceAPI } from '../api/client';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const catColors = { environmental: '#10b981', social: '#8b5cf6', governance: '#1a73e8', general: '#6b7280' };
 const statusColors = { draft: '#6b7280', active: '#1a73e8', archived: '#9ca3af' };
 
 export default function ESGPolicies() {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [policies, setPolicies] = useState([]);
   const [myAcks, setMyAcks] = useState([]);
   const [loading, setLoading] = useState(true);

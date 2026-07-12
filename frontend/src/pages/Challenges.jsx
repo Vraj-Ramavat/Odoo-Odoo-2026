@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from 'react';
 import { gamificationAPI, coreAPI } from '../api/client';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const statusColors = { draft: '#6b7280', active: '#10b981', under_review: '#f59e0b', completed: '#1a73e8', archived: '#9ca3af' };
 const statusSteps = ['draft', 'active', 'under_review', 'completed'];
 
 export default function Challenges() {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [challenges, setChallenges] = useState([]);
   const [myParticipations, setMyParticipations] = useState([]);
   const [loading, setLoading] = useState(true);

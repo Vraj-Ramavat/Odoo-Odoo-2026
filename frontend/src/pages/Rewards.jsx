@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { gamificationAPI } from '../api/client';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Rewards() {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [rewards, setRewards] = useState([]);
   const [myXP, setMyXP] = useState(0);
   const [loading, setLoading] = useState(true);
