@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { gamificationAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { Calendar, Gift, TreePine, Car, Utensils, Sparkles } from 'lucide-react';
 
 export default function Rewards() {
   const { user } = useAuth();
@@ -54,7 +55,9 @@ export default function Rewards() {
           <div style={{ color: '#ffffffaa', fontSize: 13, marginBottom: 4 }}>Your XP Balance</div>
           <div style={{ color: '#fff', fontSize: 36, fontWeight: 700 }}>{myXP} XP</div>
         </div>
-        <div style={{ fontSize: 48, opacity: 0.3 }}>🌟</div>
+        <div style={{ color: '#ffffff', opacity: 0.3 }}>
+          <Sparkles size={48} />
+        </div>
       </div>
 
       {/* Reward Cards */}
@@ -68,8 +71,13 @@ export default function Rewards() {
               {isLowStock && (
                 <div style={{ position: 'absolute', top: 12, right: 12, background: '#ef4444', color: '#fff', padding: '2px 8px', borderRadius: 99, fontSize: 11, fontWeight: 700 }}>Only {r.stock} left!</div>
               )}
-              <div style={{ fontSize: 36, marginBottom: 12 }}>
-                {r.icon === 'calendar' ? '📅' : r.icon === 'gift' ? '🎁' : r.icon === 'tree-pine' ? '🌲' : r.icon === 'car' ? '🚗' : r.icon === 'utensils' ? '🍽️' : '🎁'}
+              <div style={{ color: '#8b5cf6', marginBottom: 12, display: 'flex', alignItems: 'center', height: 36 }}>
+                {r.icon === 'calendar' ? <Calendar size={36} /> :
+                 r.icon === 'gift' ? <Gift size={36} /> :
+                 r.icon === 'tree-pine' ? <TreePine size={36} /> :
+                 r.icon === 'car' ? <Car size={36} /> :
+                 r.icon === 'utensils' ? <Utensils size={36} /> :
+                 <Gift size={36} />}
               </div>
               <h3 style={{ margin: '0 0 4px', fontSize: 16, fontWeight: 600 }}>{r.title}</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: 13, margin: '0 0 12px' }}>{r.description}</p>
@@ -86,7 +94,7 @@ export default function Rewards() {
                 onClick={() => handleRedeem(r.id)}
                 title={!canAfford ? 'Insufficient XP' : !inStock ? 'Out of stock' : 'Click to redeem'}
               >
-                {redeeming === r.id ? 'Redeeming...' : !inStock ? 'Out of Stock' : !canAfford ? `Need ${r.xp_cost - myXP} more XP` : '🎉 Redeem'}
+                {redeeming === r.id ? 'Redeeming...' : !inStock ? 'Out of Stock' : !canAfford ? `Need ${r.xp_cost - myXP} more XP` : 'Redeem'}
               </button>
             </div>
           );
