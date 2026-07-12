@@ -124,7 +124,8 @@ export default function Departments() {
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
         <input
           type="text"
-          className="form-input pl-10 py-2.5 text-sm"
+          className="form-input py-2.5 text-sm"
+          style={{ paddingLeft: '40px' }}
           placeholder="Search departments..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}

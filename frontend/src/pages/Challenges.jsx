@@ -55,7 +55,7 @@ export default function Challenges() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
         <div>
           <h1 className="page-title">Challenges</h1>
           <p className="page-subtitle">Sustainability challenges and competitions</p>

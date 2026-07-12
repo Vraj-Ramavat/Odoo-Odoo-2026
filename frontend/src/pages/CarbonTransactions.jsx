@@ -189,15 +189,84 @@ export default function CarbonTransactions() {
           <option value="manual">Manual</option>
         </select>
       </div>
+      {toast && <div className={`toast toast-${toast.type}`}>{toast.message}</div>}
+
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="page-title flex items-center gap-3">
+            <Leaf size={28} style={{ color: 'var(--g-green)' }} />
+            Carbon Transactions
+          </h1>
+          <p className="page-subtitle mt-1">
+            Track and record carbon emissions from operations
+          </p>
+        </div>
+        <button className="btn btn-primary" onClick={() => {
+          setForm({ department: '', emission_factor: '', activity_quantity: '', description: '',
+            transaction_date: new Date().toISOString().split('T')[0] });
+          setShowModal(true);
+        }}>
+          <Plus size={18} /> Manual Entry
+        </button>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="glass-card p-6">
+          <p className="text-xs font-semibold uppercase" style={{ color: 'var(--text-muted)' }}>Total Emissions</p>
+          <p className="text-2xl font-bold mt-1" style={{ color: 'var(--value-text)' }}>
+            {totalEmissions.toLocaleString(undefined, { maximumFractionDigits: 1 })}
+            <span className="text-sm font-normal ml-1" style={{ color: 'var(--text-muted)' }}>kgCO2e</span>
+          </p>
+        </div>
+        <div className="glass-card p-6">
+          <p className="text-xs font-semibold uppercase" style={{ color: 'var(--text-muted)' }}>Transactions</p>
+          <p className="text-2xl font-bold mt-1" style={{ color: 'var(--text-primary)' }}>{transactions.length}</p>
+        </div>
+        <div className="glass-card p-6">
+          <p className="text-xs font-semibold uppercase" style={{ color: 'var(--text-muted)' }}>Auto-Calculated</p>
+          <p className="text-2xl font-bold mt-1" style={{ color: 'var(--g-blue)', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+            {autoCount}
+            <span className="text-sm font-normal" style={{ color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+              <Zap size={13} style={{ color: 'var(--g-blue)' }} /> signal-driven
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-3 mb-6 flex-wrap">
+        <select className="form-input form-select py-2 text-sm w-48" value={filters.department}
+          onChange={(e) => setFilters({ ...filters, department: e.target.value })}>
+          <option value="">All Departments</option>
+          {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+        </select>
+        <select className="form-input form-select py-2 text-sm w-40" value={filters.scope}
+          onChange={(e) => setFilters({ ...filters, scope: e.target.value })}>
+          <option value="">All Scopes</option>
+          <option value="1">Scope 1</option>
+          <option value="2">Scope 2</option>
+          <option value="3">Scope 3</option>
+        </select>
+        <select className="form-input form-select py-2 text-sm w-44" value={filters.source_type}
+          onChange={(e) => setFilters({ ...filters, source_type: e.target.value })}>
+          <option value="">All Sources</option>
+          <option value="purchase">Purchase</option>
+          <option value="manufacturing">Manufacturing</option>
+          <option value="expense">Expense</option>
+          <option value="fleet">Fleet</option>
+          <option value="manual">Manual</option>
+        </select>
+      </div>
 
       {/* Table */}
-      <div style={{ background: '#ffffff', border: '1px solid #E5E7EB', borderRadius: '12px', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)', overflow: 'hidden' }}>
+      <div className="glass-card overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center" style={{ color: '#6B7280' }}>
-            <div className="w-8 h-8 border-2 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3" />
+          <div className="p-12 text-center" style={{ color: 'var(--text-muted)' }}>
+            <div className="w-8 h-8 border-2 border-white/10 border-t-emerald-500 rounded-full animate-spin mx-auto mb-3" />
           </div>
         ) : (
-          <table className="premium-table">
+          <table className="data-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -212,45 +281,45 @@ export default function CarbonTransactions() {
             </thead>
             <tbody>
               {transactions.length === 0 ? (
-                <tr><td colSpan={8} className="text-center py-12" style={{ color: '#6B7280', fontSize: '14px' }}>No transactions</td></tr>
+                <tr><td colSpan={8} className="text-center py-12" style={{ color: 'var(--text-muted)' }}>No transactions</td></tr>
               ) : transactions.map((t) => {
                 const sc = scopeColors[t.scope] || scopeColors['1'];
                 return (
                   <tr key={t.id}>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6', color: '#4B5563', fontSize: '13px' }}>
-                      <div className="flex items-center gap-1.5">
-                        <Calendar size={13} style={{ color: '#9CA3AF' }} /> {t.transaction_date}
+                    <td>
+                      <div className="flex items-center gap-1.5" style={{ color: 'var(--text-secondary)' }}>
+                        <Calendar size={13} /> {t.transaction_date}
                       </div>
                     </td>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6', color: '#111827', fontSize: '13px', fontWeight: 500 }}>{t.department_name}</td>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6' }}>
-                      <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold capitalize"
-                        style={{ background: `${sourceColors[t.source_type] || '#666'}12`, color: sourceColors[t.source_type] || '#888', border: `1px solid ${sourceColors[t.source_type] || '#666'}24` }}>
+                    <td style={{ color: 'var(--text-primary)' }}>{t.department_name}</td>
+                    <td>
+                      <span className="text-xs px-2 py-1 rounded-full font-bold capitalize"
+                        style={{ background: 'var(--badge-info-bg)', color: sourceColors[t.source_type] || 'var(--text-primary)' }}>
                         {t.source_type}
                       </span>
                     </td>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6', color: '#4B5563', fontSize: '13px' }}>
+                    <td style={{ color: 'var(--text-secondary)' }}>
                       {t.description || t.emission_factor_name}
                     </td>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6', color: '#111827', fontSize: '13px' }}>
+                    <td style={{ color: 'var(--text-primary)' }}>
                       <span className="font-mono">{parseFloat(t.activity_quantity).toLocaleString()}</span>
-                      <span className="text-xs ml-1" style={{ color: '#6B7280' }}>{t.emission_factor_unit}</span>
+                      <span className="text-xs ml-1" style={{ color: 'var(--text-muted)' }}>{t.emission_factor_unit}</span>
                     </td>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6' }}>
-                      <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold" style={{ background: sc.bg, color: sc.color }}>
+                    <td>
+                      <span className="text-xs px-2 py-1 rounded-full font-semibold" style={{ background: sc.bg, color: sc.color }}>
                         {sc.label}
                       </span>
                     </td>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6' }}>
-                      <span className="font-mono font-semibold" style={{ color: '#1E3A8A', fontSize: '14px' }}>
+                    <td>
+                      <span className="font-mono font-bold" style={{ color: 'var(--value-text)', fontSize: 15 }}>
                         {parseFloat(t.calculated_emissions_kgco2e).toLocaleString(undefined, { maximumFractionDigits: 1 })}
                       </span>
                     </td>
-                    <td style={{ padding: '14px 16px', borderBottom: '1px solid #F3F4F6' }}>
+                    <td>
                       {t.is_auto_calculated ? (
-                        <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full font-medium" style={{ background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE' }}><Zap size={11} /> Auto</span>
+                        <span className="badge badge-info"><Zap size={11} /> Auto</span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full font-medium" style={{ background: '#ECFDF5', color: '#059669', border: '1px solid #A7F3D0' }}>Manual</span>
+                        <span className="badge badge-inactive">Manual</span>
                       )}
                     </td>
                   </tr>
@@ -263,24 +332,24 @@ export default function CarbonTransactions() {
 
       {/* Manual Entry Modal */}
       {showModal && (
-        <div className="modal-overlay" style={{ background: 'rgba(17, 24, 39, 0.4)', backdropFilter: 'blur(4px)' }} onClick={(e) => e.target === e.currentTarget && setShowModal(false)}>
-          <div style={{ background: '#ffffff', borderRadius: '12px', padding: '24px', maxWidth: '500px', width: '100%', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)', border: '1px solid #E5E7EB', position: 'relative', margin: '16px' }}>
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowModal(false)}>
+          <div className="modal-content">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold" style={{ color: '#111827' }}>Manual Carbon Entry</h2>
-              <button className="btn btn-ghost btn-sm" style={{ padding: '4px', cursor: 'pointer' }} onClick={() => setShowModal(false)}><X size={18} /></button>
+              <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Manual Carbon Entry</h2>
+              <button className="btn btn-ghost btn-sm" onClick={() => setShowModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="form-label" style={{ color: '#374151', fontSize: '13px', fontWeight: 500 }}>Department</label>
-                <select className="premium-input premium-select" required value={form.department}
+                <label className="form-label">Department</label>
+                <select className="form-input form-select" required value={form.department}
                   onChange={(e) => setForm({ ...form, department: e.target.value })}>
                   <option value="">Select department...</option>
                   {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="form-label" style={{ color: '#374151', fontSize: '13px', fontWeight: 500 }}>Emission Factor</label>
-                <select className="premium-input premium-select" required value={form.emission_factor}
+                <label className="form-label">Emission Factor</label>
+                <select className="form-input form-select" required value={form.emission_factor}
                   onChange={(e) => setForm({ ...form, emission_factor: e.target.value })}>
                   <option value="">Select factor...</option>
                   {factors.map(f => (
@@ -292,31 +361,31 @@ export default function CarbonTransactions() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="form-label" style={{ color: '#374151', fontSize: '13px', fontWeight: 500 }}>Quantity</label>
-                  <input type="number" className="premium-input" required step="0.01" min="0"
+                  <label className="form-label">Quantity</label>
+                  <input type="number" className="form-input" required step="0.01" min="0"
                     value={form.activity_quantity} onChange={(e) => setForm({ ...form, activity_quantity: e.target.value })} />
                 </div>
                 <div>
-                  <label className="form-label" style={{ color: '#374151', fontSize: '13px', fontWeight: 500 }}>Date</label>
-                  <input type="date" className="premium-input" required
+                  <label className="form-label">Date</label>
+                  <input type="date" className="form-input" required
                     value={form.transaction_date} onChange={(e) => setForm({ ...form, transaction_date: e.target.value })} />
                 </div>
               </div>
               <div>
-                <label className="form-label" style={{ color: '#374151', fontSize: '13px', fontWeight: 500 }}>Description</label>
-                <input type="text" className="premium-input" placeholder="Optional description"
+                <label className="form-label">Description</label>
+                <input type="text" className="form-input" placeholder="Optional description"
                   value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
               </div>
               {form.emission_factor && form.activity_quantity && (
-                <div className="p-4 rounded-lg" style={{ background: '#EFF6FF', border: '1px solid #BFDBFE' }}>
-                  <p className="text-sm font-medium" style={{ color: '#1E3A8A', margin: 0 }}>
+                <div className="p-4 rounded-lg" style={{ background: 'var(--badge-active-bg)', border: '1px solid var(--badge-active-border)' }}>
+                  <p className="text-sm font-medium" style={{ color: 'var(--badge-active-text)' }}>
                     Estimated: {(parseFloat(form.activity_quantity) * parseFloat(factors.find(f => f.id == form.emission_factor)?.factor_value || 0)).toLocaleString(undefined, { maximumFractionDigits: 2 })} kgCO2e
                   </p>
                 </div>
               )}
               <div className="flex justify-end gap-3 pt-4">
-                <button type="button" className="btn btn-secondary" style={{ padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }} onClick={() => setShowModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary" style={{ padding: '8px 16px', borderRadius: '8px', background: '#2563EB', borderColor: '#2563EB', color: '#ffffff', cursor: 'pointer' }}>Record Transaction</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary">Record Transaction</button>
               </div>
             </form>
           </div>
