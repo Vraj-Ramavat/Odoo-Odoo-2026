@@ -12,6 +12,14 @@ import EmissionFactors from './pages/EmissionFactors';
 import CarbonTransactions from './pages/CarbonTransactions';
 import EnvironmentalGoals from './pages/EnvironmentalGoals';
 import EnvironmentalDashboard from './pages/EnvironmentalDashboard';
+import CSRActivities from './pages/CSRActivities';
+import ESGPolicies from './pages/ESGPolicies';
+import Audits from './pages/Audits';
+import ComplianceIssues from './pages/ComplianceIssues';
+import Challenges from './pages/Challenges';
+import Leaderboard from './pages/Leaderboard';
+import Rewards from './pages/Rewards';
+import Reports from './pages/Reports';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { isAuthenticated, loading, user } = useAuth();
@@ -82,21 +90,20 @@ function AppRoutes() {
         <Route path="environmental-goals" element={<ProtectedRoute allowedRoles={['admin', 'dept_head']}><EnvironmentalGoals /></ProtectedRoute>} />
 
         {/* Social (Phase 3) */}
-        <Route path="csr-activities" element={<ComingSoon title="CSR Activities" />} />
-        <Route path="participations" element={<ComingSoon title="My Participations" />} />
+        <Route path="csr-activities" element={<CSRActivities />} />
 
         {/* Governance (Phase 4) */}
-        <Route path="policies" element={<ComingSoon title="ESG Policies" />} />
-        <Route path="audits" element={<ComingSoon title="Audits" />} />
-        <Route path="compliance" element={<ComingSoon title="Compliance Issues" />} />
+        <Route path="policies" element={<ESGPolicies />} />
+        <Route path="audits" element={<Audits />} />
+        <Route path="compliance" element={<ComplianceIssues />} />
 
         {/* Gamification (Phase 5) */}
-        <Route path="challenges" element={<ComingSoon title="Challenges" />} />
-        <Route path="leaderboard" element={<ComingSoon title="Leaderboard" />} />
-        <Route path="rewards" element={<ComingSoon title="Rewards" />} />
+        <Route path="challenges" element={<Challenges />} />
+        <Route path="leaderboard" element={<Leaderboard />} />
+        <Route path="rewards" element={<Rewards />} />
 
         {/* Reports (Phase 6) */}
-        <Route path="reports" element={<ComingSoon title="Reports" />} />
+        <Route path="reports" element={<Reports />} />
       </Route>
 
       {/* Catch-all */}

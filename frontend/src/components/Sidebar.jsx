@@ -26,7 +26,6 @@ const navSections = [
     title: 'Social',
     items: [
       { path: '/csr-activities', label: 'CSR Activities', icon: Users, roles: ['admin', 'dept_head', 'employee'] },
-      { path: '/participations', label: 'My Participations', icon: Users, roles: ['employee'] },
     ],
   },
   {

@@ -110,3 +110,62 @@ export const carbonAPI = {
 };
 
 export default api;
+
+// ============ Social ============
+export const socialAPI = {
+  getActivities: (params) => api.get('/social/activities/', { params }),
+  getActivity: (id) => api.get(`/social/activities/${id}/`),
+  createActivity: (data) => api.post('/social/activities/', data),
+  updateActivity: (id, data) => api.patch(`/social/activities/${id}/`, data),
+  deleteActivity: (id) => api.delete(`/social/activities/${id}/`),
+  joinActivity: (id) => api.post(`/social/activities/${id}/join/`),
+  getParticipations: (params) => api.get('/social/participations/', { params }),
+  reviewParticipation: (id, data) => api.patch(`/social/participations/${id}/review/`, data),
+};
+
+// ============ Governance ============
+export const governanceAPI = {
+  getPolicies: (params) => api.get('/governance/policies/', { params }),
+  getPolicy: (id) => api.get(`/governance/policies/${id}/`),
+  createPolicy: (data) => api.post('/governance/policies/', data),
+  deletePolicy: (id) => api.delete(`/governance/policies/${id}/`),
+  getAcknowledgements: (params) => api.get('/governance/acknowledgements/', { params }),
+  acknowledge: (id) => api.post(`/governance/acknowledgements/${id}/acknowledge/`),
+  getAudits: (params) => api.get('/governance/audits/', { params }),
+  createAudit: (data) => api.post('/governance/audits/', data),
+  getComplianceIssues: (params) => api.get('/governance/compliance-issues/', { params }),
+  createComplianceIssue: (data) => api.post('/governance/compliance-issues/', data),
+  updateComplianceIssue: (id, data) => api.patch(`/governance/compliance-issues/${id}/`, data),
+};
+
+// ============ Gamification ============
+export const gamificationAPI = {
+  getChallenges: (params) => api.get('/gamification/challenges/', { params }),
+  createChallenge: (data) => api.post('/gamification/challenges/', data),
+  transitionChallenge: (id, data) => api.patch(`/gamification/challenges/${id}/transition/`, data),
+  joinChallenge: (id) => api.post(`/gamification/challenges/${id}/join/`),
+  getParticipations: (params) => api.get('/gamification/challenge-participations/', { params }),
+  updateProgress: (id, data) => api.patch(`/gamification/challenge-participations/${id}/update_progress/`, data),
+  getBadges: () => api.get('/gamification/badges/'),
+  getRewards: () => api.get('/gamification/rewards/'),
+  redeemReward: (id) => api.post(`/gamification/rewards/${id}/redeem/`),
+  getLeaderboard: (params) => api.get('/gamification/leaderboard/', { params }),
+  getDepartmentScores: (params) => api.get('/gamification/department-scores/', { params }),
+};
+
+// ============ Reports ============
+export const reportsAPI = {
+  getEnvironmental: (params) => api.get('/reports/environmental/', { params }),
+  getSocial: (params) => api.get('/reports/social/', { params }),
+  getGovernance: (params) => api.get('/reports/governance/', { params }),
+  getSummary: (params) => api.get('/reports/summary/', { params }),
+  getCustom: (params) => api.get('/reports/custom/', { params }),
+};
+
+// ============ Notifications ============
+export const notificationsAPI = {
+  getAll: () => api.get('/notifications/'),
+  markRead: (id) => api.patch(`/notifications/${id}/read/`),
+  markAllRead: () => api.post('/notifications/mark_all_read/'),
+  getUnreadCount: () => api.get('/notifications/unread_count/'),
+};
