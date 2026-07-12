@@ -29,14 +29,16 @@ def auto_create_carbon_transaction(sender, instance, created, **kwargs):
     Signal-driven auto emission calculation (Section 3.1 of plan).
     Fires on every ERP record save when toggle is enabled.
     """
-    config = ESGConfiguration.get_config()
+    company = getattr(instance.department, 'company', None)
+    config = ESGConfiguration.get_config(company=company)
     if not config.auto_emission_calculation:
         return
 
-    # Find matching active emission factor
+    # Find matching active emission factor for this tenant company
     factor = EmissionFactor.get_active_factor(
         activity_type=instance.activity_type,
         date=instance.date,
+        company=company,
     )
     if factor is None:
         return  # No matching factor — skip silently
@@ -59,10 +61,12 @@ def auto_create_carbon_transaction(sender, instance, created, **kwargs):
             txn.emission_factor = factor
             txn.transaction_date = instance.date
             txn.department = instance.department
+            txn.company = company
             txn.save()
         return
 
     CarbonTransaction.objects.create(
+        company=company,
         department=instance.department,
         emission_factor=factor,
         source_type=source_type,

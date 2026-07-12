@@ -109,6 +109,7 @@ def flag_overdue_issues():
         issue.save()
         if issue.assigned_to:
             Notification.objects.create(
+                company=issue.company,
                 recipient=issue.assigned_to,
                 notification_type='compliance',
                 title=f'Overdue: {issue.title}',

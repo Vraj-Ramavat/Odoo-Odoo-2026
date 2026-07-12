@@ -102,13 +102,20 @@ class ChallengeParticipationViewSet(viewsets.ModelViewSet):
         return Response(ChallengeParticipationSerializer(cp).data)
 
 
+from core.models import ESGConfiguration
+
 def _check_and_award_badges(user):
     """Auto-award any badges the user is now eligible for."""
-    for badge in Badge.objects.filter(is_active=True):
+    config = ESGConfiguration.get_config(company=user.company)
+    if not config.badge_auto_award:
+        return
+
+    for badge in Badge.objects.filter(is_active=True, company=user.company):
         if not EmployeeBadge.objects.filter(employee=user, badge=badge).exists():
             if badge.check_eligibility(user):
-                EmployeeBadge.objects.create(employee=user, badge=badge)
+                EmployeeBadge.objects.create(employee=user, badge=badge, company=user.company)
                 Notification.objects.create(
+                    company=user.company,
                     recipient=user,
                     notification_type='badge',
                     title=f'Badge Unlocked: {badge.title}',
@@ -141,9 +148,11 @@ class RewardViewSet(viewsets.ModelViewSet):
             reward.stock -= 1
             reward.save()
             redemption = RewardRedemption.objects.create(
+                company=request.user.company,
                 employee=request.user, reward=reward, xp_spent=reward.xp_cost,
             )
             Notification.objects.create(
+                company=request.user.company,
                 recipient=request.user,
                 notification_type='reward',
                 title=f'Reward Redeemed: {reward.title}',

@@ -60,7 +60,7 @@ class EmployeeParticipationViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Status must be approved or rejected'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Evidence gate
-        config = ESGConfiguration.objects.first()
+        config = ESGConfiguration.get_config(company=participation.company)
         if decision == 'approved' and config and getattr(config, 'evidence_required_for_csr', False):
             if not participation.proof_file and not participation.proof_description:
                 return Response(

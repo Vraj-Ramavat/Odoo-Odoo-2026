@@ -2,8 +2,8 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from accounts.permissions import IsAdminOrReadOnly, IsAdmin
-from .models import Department, Category, ESGConfiguration
-from .serializers import DepartmentSerializer, CategorySerializer, ESGConfigurationSerializer
+from .models import Department, Category, ESGConfiguration, Product
+from .serializers import DepartmentSerializer, CategorySerializer, ESGConfigurationSerializer, ProductSerializer
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
@@ -38,6 +38,22 @@ class CategoryViewSet(viewsets.ModelViewSet):
         status_filter = self.request.query_params.get('status')
         if status_filter:
             qs = qs.filter(status=status_filter)
+        return qs
+
+
+from core.tenancy import TenantModelViewSetMixin
+
+class ProductViewSet(TenantModelViewSetMixin, viewsets.ModelViewSet):
+    """CRUD for products (Product ESG Profiles). Admin can write; anyone authenticated can read."""
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        search = self.request.query_params.get('search')
+        if search:
+            qs = qs.filter(name__icontains=search)
         return qs
 
 

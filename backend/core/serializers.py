@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Department, Category, ESGConfiguration
+from .models import Department, Category, ESGConfiguration, Product
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -48,3 +48,10 @@ class ESGConfigurationSerializer(serializers.ModelSerializer):
                 'Environmental + Social + Governance weights must sum to 100.'
             )
         return attrs
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'code', 'carbon_footprint_kg', 'recyclability_pct', 'sustainable_sourced', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']

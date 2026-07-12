@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from core.models import Company, Department
+from core.models import Company, Department, Product
 from carbon.models import CarbonTransaction, EmissionFactor
 from governance.models import ESGPolicy
 
@@ -22,6 +22,7 @@ class Command(BaseCommand):
         CarbonTransaction.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
         EmissionFactor.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
         ESGPolicy.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
+        Product.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
         User.objects.filter(username__in=["usera", "userb"]).delete()
         Company.objects.filter(code__in=["comp-a", "comp-b"]).delete()
 
@@ -77,6 +78,15 @@ class Command(BaseCommand):
             priority="mandatory", status="active", effective_date=timezone.now().date()
         )
 
+        product_a = Product.objects.create(
+            company=company_a, name="Sustainable Product A", code="prod-a",
+            carbon_footprint_kg=1.5, recyclability_pct=85.0
+        )
+        product_b = Product.objects.create(
+            company=company_b, name="Sustainable Product B", code="prod-b",
+            carbon_footprint_kg=3.2, recyclability_pct=40.0
+        )
+
         self.stdout.write("Obtaining JWT and authenticating as User A (Company A)...")
         response = client.post('/api/auth/login/', {'username': 'usera', 'password': 'password123'})
         if response.status_code != 200:
@@ -111,6 +121,13 @@ class Command(BaseCommand):
         res = client.get(f'/api/governance/policies/{policy_b.id}/')
         assert res.status_code == 404, f"Expected 404 on policy view, got {res.status_code}"
 
+        self.stdout.write("Verifying product endpoint isolation...")
+        res = client.get(f'/api/core/products/{product_a.id}/')
+        assert res.status_code == 200, f"Expected 200, got {res.status_code}"
+
+        res = client.get(f'/api/core/products/{product_b.id}/')
+        assert res.status_code == 404, f"Expected 404 on product view, got {res.status_code}"
+
         self.stdout.write("Verifying cross-tenant relation creation prevention...")
         res = client.post('/api/carbon/transactions/', {
             'department': dept_b.id,
@@ -125,6 +142,7 @@ class Command(BaseCommand):
         CarbonTransaction.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
         EmissionFactor.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
         ESGPolicy.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
+        Product.objects.filter(company__code__in=["comp-a", "comp-b"]).delete()
         User.objects.filter(username__in=["usera", "userb"]).delete()
         Department.objects.filter(code__in=["dept-a", "dept-b"]).delete()
         company_a.delete()
