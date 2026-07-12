@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { gamificationAPI, coreAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
-const statusColors = { draft: '#6b7280', active: '#10b981', under_review: '#f59e0b', completed: '#1a73e8', archived: '#9ca3af' };
+const statusColors = { draft: '#4b5563', active: '#047857', under_review: '#b45309', completed: '#1d4ed8', archived: '#6b7280' };
 const statusSteps = ['draft', 'active', 'under_review', 'completed'];
 
 export default function Challenges() {

@@ -89,9 +89,9 @@ export default function EmissionFactors() {
   );
 
   const scopeColors = {
-    '1': { bg: 'rgba(244, 63, 94, 0.12)', color: 'var(--rose)', label: 'Scope 1' },
-    '2': { bg: 'rgba(59, 130, 246, 0.12)', color: 'var(--blue)', label: 'Scope 2' },
-    '3': { bg: 'rgba(139, 92, 246, 0.12)', color: 'var(--purple)', label: 'Scope 3' },
+    '1': { bg: 'var(--scope1-bg)', color: 'var(--scope1-text)', label: 'Scope 1' },
+    '2': { bg: 'var(--scope2-bg)', color: 'var(--scope2-text)', label: 'Scope 2' },
+    '3': { bg: 'var(--scope3-bg)', color: 'var(--scope3-text)', label: 'Scope 3' },
   };
 
   return (
@@ -142,8 +142,9 @@ export default function EmissionFactors() {
                 height: '48px',
                 borderRadius: '12px',
                 background: filterScope === opt.value ? 'var(--accent-glow)' : 'var(--bg-card)',
-                color: filterScope === opt.value ? 'var(--accent-light)' : 'var(--text-secondary)',
-                border: `1px solid ${filterScope === opt.value ? 'var(--accent)' : 'var(--border)'}`,
+                color: filterScope === opt.value ? 'var(--badge-active-text)' : 'var(--text-primary)',
+                border: `1px solid ${filterScope === opt.value ? 'var(--badge-active-border)' : 'var(--border)'}`,
+                fontWeight: 600,
               }}
               onClick={() => setFilterScope(opt.value)}>
               {opt.label}
@@ -191,7 +192,7 @@ export default function EmissionFactors() {
                         {sc.label}
                       </span>
                     </td>
-                    <td><span className="font-mono font-semibold" style={{ color: 'var(--factor-value-color)' }}>{f.factor_value}</span></td>
+                    <td><span className="font-mono font-bold" style={{ color: 'var(--value-text)', fontSize: 15 }}>{f.factor_value}</span></td>
                     <td style={{ color: 'var(--text-secondary)' }}>kgCO2e / {f.unit}</td>
                     <td style={{ color: 'var(--text-muted)' }}>{f.source || '--'}</td>
                     <td style={{ color: 'var(--text-secondary)' }}>

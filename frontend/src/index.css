@@ -63,11 +63,32 @@
   --input: #DADCE0;
   --ring: var(--g-blue);
 
-  /* Factor Value & Status Badge customizations */
-  --factor-value-color: #1E293B;
-  --badge-active-bg: #DCFCE7;
-  --badge-active-text: #15803D;
-  --badge-active-border: #86EFAC;
+  /* ── Semantic contrast tokens (light mode) ── */
+  --badge-active-bg: rgba(16, 185, 129, 0.18);
+  --badge-active-text: #065f46;
+  --badge-active-border: rgba(16, 185, 129, 0.4);
+  --badge-inactive-bg: rgba(100, 116, 139, 0.18);
+  --badge-inactive-text: #1f2937;
+  --badge-inactive-border: rgba(100, 116, 139, 0.3);
+  --badge-warning-bg: rgba(245, 158, 11, 0.18);
+  --badge-warning-text: #78350f;
+  --badge-warning-border: rgba(245, 158, 11, 0.35);
+  --badge-danger-bg: rgba(244, 63, 94, 0.18);
+  --badge-danger-text: #881337;
+  --badge-danger-border: rgba(244, 63, 94, 0.35);
+  --badge-info-bg: rgba(59, 130, 246, 0.18);
+  --badge-info-text: #1e3a8a;
+  --badge-info-border: rgba(59, 130, 246, 0.35);
+  /* Scope colors */
+  --scope1-text: #9f1239;  --scope1-bg: rgba(244, 63, 94, 0.15);
+  --scope2-text: #1e3a8a;  --scope2-bg: rgba(59, 130, 246, 0.15);
+  --scope3-text: #5b21b6;  --scope3-bg: rgba(139, 92, 246, 0.15);
+  /* Source type colors */
+  --src-purchase: #1e3a8a;  --src-manufacturing: #5b21b6;
+  --src-expense: #78350f;   --src-fleet: #881337;
+  --src-manual: #065f46;
+  /* Data value color */
+  --value-text: #064e3b;
 
   /* Core layout variables mapping */
   --bg-primary: var(--g-surface);
@@ -135,9 +156,10 @@
     font-family: inherit;
   }
 
-  /* Recharts label reset to sans-serif */
+  /* Recharts label reset to sans-serif and adaptive theme color */
   svg text {
     font-family: var(--font-sans) !important;
+    fill: var(--text-primary) !important;
   }
 }
 
@@ -299,15 +321,11 @@
   font-weight: 600;
   letter-spacing: 0.02em;
 }
-.badge-active {
-  background: var(--badge-active-bg);
-  color: var(--badge-active-text);
-  border: 1px solid var(--badge-active-border);
-}
-.badge-inactive { background: rgba(100, 116, 139, 0.15); color: var(--text-muted); }
-.badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
-.badge-danger { background: rgba(244, 63, 94, 0.15); color: var(--rose); }
-.badge-info { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
+.badge-active   { background: var(--badge-active-bg);   color: var(--badge-active-text);   border: 1px solid var(--badge-active-border); }
+.badge-inactive { background: var(--badge-inactive-bg); color: var(--badge-inactive-text); border: 1px solid var(--badge-inactive-border); }
+.badge-warning  { background: var(--badge-warning-bg);  color: var(--badge-warning-text);  border: 1px solid var(--badge-warning-border); }
+.badge-danger   { background: var(--badge-danger-bg);   color: var(--badge-danger-text);   border: 1px solid var(--badge-danger-border); }
+.badge-info     { background: var(--badge-info-bg);     color: var(--badge-info-text);     border: 1px solid var(--badge-info-border); }
 
 .stats-grid {
   display: grid;
@@ -478,9 +496,30 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 0 12px rgba(16, 185, 129, 0.25);
 
-  /* Factor Value & Status Badge customizations */
-  --factor-value-color: #F8FAFC;
-  --badge-active-bg: rgba(22, 163, 74, 0.2);
-  --badge-active-text: #4ADE80;
-  --badge-active-border: rgba(74, 222, 128, 0.4);
+  /* ── Semantic contrast tokens (dark mode) ── */
+  --badge-active-bg: rgba(52, 211, 153, 0.2);
+  --badge-active-text: #6ee7b7;
+  --badge-active-border: rgba(52, 211, 153, 0.4);
+  --badge-inactive-bg: rgba(148, 163, 184, 0.2);
+  --badge-inactive-text: #e2e8f0;
+  --badge-inactive-border: rgba(148, 163, 184, 0.3);
+  --badge-warning-bg: rgba(251, 191, 36, 0.2);
+  --badge-warning-text: #fde68a;
+  --badge-warning-border: rgba(251, 191, 36, 0.35);
+  --badge-danger-bg: rgba(248, 113, 113, 0.2);
+  --badge-danger-text: #fca5a5;
+  --badge-danger-border: rgba(248, 113, 113, 0.35);
+  --badge-info-bg: rgba(96, 165, 250, 0.2);
+  --badge-info-text: #bfdbfe;
+  --badge-info-border: rgba(96, 165, 250, 0.35);
+  /* Scope colors (bright for dark bg) */
+  --scope1-text: #fca5a5;  --scope1-bg: rgba(248, 113, 113, 0.2);
+  --scope2-text: #93c5fd;  --scope2-bg: rgba(96, 165, 250, 0.2);
+  --scope3-text: #c4b5fd;  --scope3-bg: rgba(167, 139, 250, 0.2);
+  /* Source type colors (brighter for dark) */
+  --src-purchase: #93c5fd;  --src-manufacturing: #c4b5fd;
+  --src-expense: #fde68a;   --src-fleet: #fca5a5;
+  --src-manual: #6ee7b7;
+  /* Data value color */
+  --value-text: #6ee7b7;
 }
