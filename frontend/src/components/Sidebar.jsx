@@ -85,7 +85,7 @@ export default function Sidebar() {
         collapsed ? 'w-[72px]' : 'w-[260px]'
       }`}
       style={{
-        background: 'linear-gradient(180deg, #0d1520 0%, #111827 100%)',
+        background: 'var(--bg-secondary)',
         borderRight: '1px solid var(--border)',
       }}
     >
@@ -94,8 +94,8 @@ export default function Sidebar() {
         <div
           className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
-            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
+            background: 'var(--accent)',
+            boxShadow: 'var(--shadow-sm)',
           }}
         >
           <Leaf size={20} color="white" />
@@ -103,12 +103,12 @@ export default function Sidebar() {
         {!collapsed && (
           <div>
             <h1 className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>EcoSphere</h1>
-            <p className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'var(--accent)' }}>ESG Platform</p>
+            <p className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'var(--accent)' }}>ESG Platform</p>
           </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto p-1.5 rounded-md hover:bg-white/5 transition-colors"
+          className="ml-auto p-1.5 rounded-md hover:bg-black/5 transition-colors"
           style={{ color: 'var(--text-muted)' }}
         >
           {collapsed ? <Menu size={18} /> : <X size={18} />}
@@ -137,9 +137,8 @@ export default function Sidebar() {
                       collapsed ? 'justify-center' : ''
                     }`}
                     style={{
-                      color: isActive ? 'var(--accent-light)' : 'var(--text-secondary)',
+                      color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
                       background: isActive ? 'var(--accent-glow)' : 'transparent',
-                      borderLeft: isActive ? '3px solid var(--accent)' : '3px solid transparent',
                     }}
                     title={collapsed ? item.label : undefined}
                   >
@@ -156,15 +155,15 @@ export default function Sidebar() {
       {/* User Profile */}
       <div className="flex-shrink-0 p-3" style={{ borderTop: '1px solid var(--border)' }}>
         <div
-          className={`flex items-center gap-3 p-2.5 rounded-lg cursor-pointer hover:bg-white/5 transition-colors ${
+          className={`flex items-center gap-3 p-2.5 rounded-lg cursor-pointer hover:bg-black/5 transition-colors ${
             collapsed ? 'justify-center' : ''
           }`}
           onClick={() => setShowProfile(!showProfile)}
         >
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold"
+            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium"
             style={{
-              background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
+              background: 'var(--g-purple)',
               color: 'white',
             }}
           >
@@ -186,12 +185,12 @@ export default function Sidebar() {
         </div>
 
         {showProfile && !collapsed && (
-          <div className="mt-2 rounded-lg p-1" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)' }}>
+          <div className="mt-2 rounded-lg p-1" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              style={{ color: 'var(--rose)' }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(244, 63, 94, 0.1)'}
+              style={{ color: 'var(--g-red)' }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(217, 48, 37, 0.1)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             >
               <LogOut size={16} />

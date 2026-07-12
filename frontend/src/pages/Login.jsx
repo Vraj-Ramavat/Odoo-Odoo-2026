@@ -31,37 +31,36 @@ export default function Login() {
       <div
         className="hidden lg:flex flex-col justify-between w-[480px] p-12 relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #064e3b 0%, #0d1520 50%, #111827 100%)',
+          background: 'linear-gradient(135deg, #1A73E8 0%, #1557b0 100%)',
         }}
       >
         {/* Decorative circles */}
         <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, var(--accent), transparent)' }} />
+          style={{ background: 'radial-gradient(circle, var(--bg-card), transparent)' }} />
         <div className="absolute bottom-20 -right-10 w-56 h-56 rounded-full opacity-8"
-          style={{ background: 'radial-gradient(circle, var(--accent), transparent)' }} />
+          style={{ background: 'radial-gradient(circle, var(--bg-card), transparent)' }} />
 
         <div>
           <div className="flex items-center gap-3 mb-16">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-12 h-12 rounded-xl flex items-center justify-center bg-white"
               style={{
-                background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
-                boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3)',
+                boxShadow: 'var(--shadow-sm)',
               }}
             >
-              <Leaf size={26} color="white" />
+              <Leaf size={26} color="#1A73E8" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>EcoSphere</h1>
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: 'var(--accent)' }}>ESG Management</p>
+              <h1 className="text-2xl font-bold" style={{ color: 'white' }}>EcoSphere</h1>
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: 'rgba(255,255,255,0.7)' }}>ESG Management</p>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold leading-tight mb-4" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="text-3xl font-bold leading-tight mb-4" style={{ color: 'white' }}>
             Measure. Manage.<br />
-            <span style={{ color: 'var(--accent-light)' }}>Improve.</span>
+            <span style={{ color: 'rgba(255,255,255,0.9)' }}>Improve.</span>
           </h2>
-          <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Track your organization's Environmental, Social & Governance performance
             with real-time analytics, gamification, and comprehensive reporting.
           </p>
@@ -74,10 +73,10 @@ export default function Login() {
             { label: 'Compliance', desc: 'Policy & audit management' },
           ].map((feat) => (
             <div key={feat.label} className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent)' }} />
+              <div className="w-2 h-2 rounded-full bg-white" />
               <div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{feat.label}</p>
-                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{feat.desc}</p>
+                <p className="text-sm font-semibold" style={{ color: 'white' }}>{feat.label}</p>
+                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>{feat.desc}</p>
               </div>
             </div>
           ))}
@@ -90,8 +89,7 @@ export default function Login() {
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-10">
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))' }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--accent)]"
             >
               <Leaf size={22} color="white" />
             </div>
@@ -105,7 +103,7 @@ export default function Login() {
 
           {error && (
             <div className="mb-6 p-4 rounded-lg text-sm font-medium"
-              style={{ background: 'rgba(244, 63, 94, 0.1)', color: 'var(--rose)', border: '1px solid rgba(244, 63, 94, 0.2)' }}>
+              style={{ background: 'rgba(217, 48, 37, 0.1)', color: 'var(--g-red)', border: '1px solid rgba(217, 48, 37, 0.2)' }}>
               {error}
             </div>
           )}
@@ -149,8 +147,8 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary btn-lg w-full justify-center"
-              style={{ opacity: loading ? 0.7 : 1 }}
+              className="btn btn-primary btn-lg w-full justify-center text-white"
+              style={{ opacity: loading ? 0.7 : 1, background: 'var(--accent)' }}
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -174,9 +172,9 @@ export default function Login() {
           <div className="mt-8 p-4 rounded-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <p className="text-xs font-semibold mb-2" style={{ color: 'var(--text-muted)' }}>DEMO CREDENTIALS</p>
             <div className="space-y-1.5 text-xs" style={{ color: 'var(--text-secondary)' }}>
-              <p><span className="font-medium" style={{ color: 'var(--accent)' }}>Admin:</span> admin / admin123</p>
-              <p><span className="font-medium" style={{ color: 'var(--blue)' }}>Dept Head:</span> dept_head / dept123</p>
-              <p><span className="font-medium" style={{ color: 'var(--purple)' }}>Employee:</span> employee1 / emp123</p>
+              <p><span className="font-medium" style={{ color: 'var(--accent)' }}>Admin:</span> admin / EcoSphere2026!</p>
+              <p><span className="font-medium" style={{ color: 'var(--blue)' }}>Dept Head:</span> sarah.chen / EcoSphere2026!</p>
+              <p><span className="font-medium" style={{ color: 'var(--purple)' }}>Employee:</span> james.wilson / EcoSphere2026!</p>
             </div>
           </div>
         </div>

@@ -55,8 +55,7 @@ export default function Register() {
       <div className="w-full max-w-lg">
         <div className="flex items-center gap-3 mb-8">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))' }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--accent)]"
           >
             <Leaf size={22} color="white" />
           </div>
@@ -70,7 +69,7 @@ export default function Register() {
 
         {error && (
           <div className="mb-6 p-4 rounded-lg text-sm font-medium"
-            style={{ background: 'rgba(244, 63, 94, 0.1)', color: 'var(--rose)', border: '1px solid rgba(244, 63, 94, 0.2)' }}>
+            style={{ background: 'rgba(217, 48, 37, 0.1)', color: 'var(--g-red)', border: '1px solid rgba(217, 48, 37, 0.2)' }}>
             {error}
           </div>
         )}
@@ -147,8 +146,8 @@ export default function Register() {
               value={form.password_confirm} onChange={(e) => updateForm('password_confirm', e.target.value)} />
           </div>
 
-          <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full justify-center mt-2"
-            style={{ opacity: loading ? 0.7 : 1 }}>
+          <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full justify-center mt-2 text-white"
+            style={{ opacity: loading ? 0.7 : 1, background: 'var(--accent)' }}>
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (

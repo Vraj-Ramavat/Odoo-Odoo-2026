@@ -1,52 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 @import "tailwindcss";
 
-/* ========================================
-   EcoSphere Design System
-   Premium dark theme with emerald accent
-   ======================================== */
-
 :root {
-  /* Core palette */
-  --bg-primary: #0a0f1a;
-  --bg-secondary: #111827;
-  --bg-card: #1a2332;
-  --bg-card-hover: #1f2b3d;
-  --bg-elevated: #243044;
+  /* Google palette colors */
+  --g-blue: #1A73E8;
+  --g-green: #1E8E3E;
+  --g-yellow: #F9AB00;
+  --g-red: #D93025;
+  --g-purple: #A142F4;
+  --g-teal: #24C1E0;
+  --g-surface: #F8F9FA;
+  --g-search: #F1F3F4;
+  --g-active: #E8F0FE;
 
-  /* Accent — emerald green for ESG */
-  --accent: #10b981;
-  --accent-light: #34d399;
-  --accent-dark: #059669;
-  --accent-glow: rgba(16, 185, 129, 0.15);
+  /* Core layout variables mapping */
+  --bg-primary: var(--g-surface);
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: var(--g-surface);
+  --bg-elevated: #ffffff;
+
+  /* Accent — Google Blue */
+  --accent: var(--g-blue);
+  --accent-light: var(--g-active);
+  --accent-dark: #1557b0;
+  --accent-glow: var(--g-active);
 
   /* Secondary accents */
-  --blue: #3b82f6;
-  --purple: #8b5cf6;
-  --amber: #f59e0b;
-  --rose: #f43f5e;
-  --cyan: #06b6d4;
+  --blue: var(--g-blue);
+  --purple: var(--g-purple);
+  --amber: var(--g-yellow);
+  --rose: var(--g-red);
+  --cyan: var(--g-teal);
 
-  /* Text */
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  /* Text colors */
+  --text-primary: #202124;
+  --text-secondary: #5F6368;
+  --text-muted: #70757a;
 
-  /* Borders */
-  --border: rgba(148, 163, 184, 0.1);
-  --border-hover: rgba(148, 163, 184, 0.2);
+  /* Borders & Shadows */
+  --border: #DADCE0;
+  --border-hover: #BDC1C6;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.15);
+  --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+  --shadow-md: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  --shadow-lg: 0 4px 16px 0 rgba(60, 64, 67, 0.15);
+  --shadow-glow: 0 0 0 3px var(--g-active);
 
-  /* Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Radius (Google Standard) */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --radius-xl: 16px;
 }
 
 * {

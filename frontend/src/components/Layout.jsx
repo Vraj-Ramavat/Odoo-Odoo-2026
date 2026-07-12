@@ -19,8 +19,7 @@ export default function Layout() {
         <header
           className="sticky top-0 z-40 h-16 flex items-center justify-between px-8"
           style={{
-            background: 'rgba(10, 15, 26, 0.8)',
-            backdropFilter: 'blur(12px)',
+            background: 'var(--bg-secondary)',
             borderBottom: '1px solid var(--border)',
           }}
         >
@@ -35,7 +34,7 @@ export default function Layout() {
               type="text"
               placeholder="Search departments, activities..."
               className="form-input pl-10 py-2 text-sm"
-              style={{ background: 'var(--bg-card)', fontSize: '13px' }}
+              style={{ background: 'var(--g-search)', fontSize: '13px', border: 'none' }}
             />
           </div>
 
@@ -45,13 +44,13 @@ export default function Layout() {
             <button
               className="relative p-2 rounded-lg transition-colors"
               style={{ color: 'var(--text-secondary)' }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-card)'}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--g-surface)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             >
               <Bell size={20} />
               <span
                 className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center"
-                style={{ background: 'var(--rose)', color: 'white' }}
+                style={{ background: 'var(--g-red)', color: 'white' }}
               >
                 3
               </span>
@@ -68,9 +67,9 @@ export default function Layout() {
                 </p>
               </div>
               <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium"
                 style={{
-                  background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
+                  background: 'var(--g-purple)',
                   color: 'white',
                 }}
               >
