@@ -18,6 +18,7 @@ from gamification.models import (
 )
 from core.models import Department
 from accounts.models import User
+from core.tenancy import tenant_filter
 
 
 @api_view(['GET'])
@@ -29,6 +30,7 @@ def environmental_report(request):
     since = date.today() - timedelta(days=days)
 
     qs = CarbonTransaction.objects.filter(transaction_date__gte=since)
+    qs = tenant_filter(request, qs)
     if dept:
         qs = qs.filter(department_id=dept)
 
@@ -44,7 +46,8 @@ def environmental_report(request):
     by_dept = list(qs.values('department__name').annotate(
         emissions=Sum('calculated_emissions_kgco2e'), count=Count('id'),
     ).order_by('-emissions'))
-    goals = list(EnvironmentalGoal.objects.values('status').annotate(count=Count('id')))
+    goals_qs = tenant_filter(request, EnvironmentalGoal.objects.all())
+    goals = list(goals_qs.values('status').annotate(count=Count('id')))
 
     data = {
         'report_type': 'Environmental',
@@ -67,8 +70,8 @@ def social_report(request):
     """Social report — CSR activities, participation, diversity."""
     fmt = request.query_params.get('format', 'json')
 
-    activities = CSRActivity.objects.all()
-    participations = EmployeeParticipation.objects.all()
+    activities = tenant_filter(request, CSRActivity.objects.all())
+    participations = tenant_filter(request, EmployeeParticipation.objects.all())
 
     data = {
         'report_type': 'Social',
@@ -100,9 +103,9 @@ def governance_report(request):
     """Governance report — policies, audits, compliance."""
     fmt = request.query_params.get('format', 'json')
 
-    policies = ESGPolicy.objects.filter(status='active')
-    issues = ComplianceIssue.objects.all()
-    audits = Audit.objects.all()
+    policies = tenant_filter(request, ESGPolicy.objects.filter(status='active'))
+    issues = tenant_filter(request, ComplianceIssue.objects.all())
+    audits = tenant_filter(request, Audit.objects.all())
 
     policy_stats = []
     for p in policies:
@@ -145,7 +148,8 @@ def summary_report(request):
     """ESG Summary — combined dashboard data."""
     fmt = request.query_params.get('format', 'json')
 
-    scores = DepartmentScore.objects.order_by('-period', 'department')[:20]
+    scores_qs = tenant_filter(request, DepartmentScore.objects.all())
+    scores = scores_qs.order_by('-period', 'department')[:20]
 
     data = {
         'report_type': 'ESG Summary',
@@ -162,14 +166,14 @@ def summary_report(request):
             for s in scores
         ],
         'totals': {
-            'employees': User.objects.count(),
-            'departments': Department.objects.count(),
-            'carbon_transactions': CarbonTransaction.objects.count(),
-            'csr_activities': CSRActivity.objects.count(),
-            'policies': ESGPolicy.objects.filter(status='active').count(),
-            'challenges': Challenge.objects.exclude(status='archived').count(),
-            'badges_awarded': EmployeeBadge.objects.count(),
-            'rewards_redeemed': RewardRedemption.objects.count(),
+            'employees': tenant_filter(request, User.objects.all()).count(),
+            'departments': tenant_filter(request, Department.objects.all()).count(),
+            'carbon_transactions': tenant_filter(request, CarbonTransaction.objects.all()).count(),
+            'csr_activities': tenant_filter(request, CSRActivity.objects.all()).count(),
+            'policies': tenant_filter(request, ESGPolicy.objects.filter(status='active')).count(),
+            'challenges': tenant_filter(request, Challenge.objects.exclude(status='archived')).count(),
+            'badges_awarded': tenant_filter(request, EmployeeBadge.objects.all()).count(),
+            'rewards_redeemed': tenant_filter(request, RewardRedemption.objects.all()).count(),
         },
     }
 
@@ -193,7 +197,7 @@ def custom_report(request):
     fmt = request.query_params.get('format', 'json')
 
     if module == 'environmental':
-        qs = CarbonTransaction.objects.all()
+        qs = tenant_filter(request, CarbonTransaction.objects.all())
         if dept:
             qs = qs.filter(department_id=dept)
         if start_date:
@@ -217,7 +221,7 @@ def custom_report(request):
         return Response({'module': module, 'count': len(rows), 'data': rows})
 
     elif module == 'social':
-        qs = CSRActivity.objects.all()
+        qs = tenant_filter(request, CSRActivity.objects.all())
         if dept:
             qs = qs.filter(department_id=dept)
         rows = list(qs.values('title', 'department__name', 'status',
@@ -231,7 +235,7 @@ def custom_report(request):
         return Response({'module': module, 'count': len(rows), 'data': rows})
 
     elif module == 'governance':
-        qs = ComplianceIssue.objects.all()
+        qs = tenant_filter(request, ComplianceIssue.objects.all())
         if dept:
             qs = qs.filter(department_id=dept)
         rows = list(qs.values('title', 'department__name', 'severity',

@@ -1,10 +1,31 @@
 from django.db import models
 
 
+class Company(models.Model):
+    """Organization/tenant entity in EcoSphere."""
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'companies'
+
+    def __str__(self):
+        return f"{self.name} ({self.code})"
+
+
 class Department(models.Model):
     """Organizational hierarchy and ESG ownership."""
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=20, unique=True)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='departments',
+    )
     head = models.ForeignKey(
         'accounts.User',
         null=True,
@@ -61,9 +82,15 @@ class Category(models.Model):
 
 class ESGConfiguration(models.Model):
     """
-    Singleton configuration for ESG scoring weights and feature toggles.
-    Only one row should exist — use get_config() helper.
+    Singleton configuration for ESG scoring weights and feature toggles per company.
     """
+    company = models.OneToOneField(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='config',
+    )
     # Scoring weights (must sum to 100)
     environmental_weight = models.DecimalField(max_digits=5, decimal_places=2, default=40.00)
     social_weight = models.DecimalField(max_digits=5, decimal_places=2, default=30.00)
@@ -93,18 +120,20 @@ class ESGConfiguration(models.Model):
 
     class Meta:
         verbose_name = 'ESG Configuration'
-        verbose_name_plural = 'ESG Configuration'
+        verbose_name_plural = 'ESG Configurations'
 
     def __str__(self):
-        return 'ESG Configuration'
+        return f"ESG Configuration - {self.company}"
 
     def save(self, *args, **kwargs):
-        # Enforce singleton: always use pk=1
-        self.pk = 1
         super().save(*args, **kwargs)
 
     @classmethod
-    def get_config(cls):
-        """Get or create the singleton config row."""
-        config, _ = cls.objects.get_or_create(pk=1)
+    def get_config(cls, company=None):
+        """Get or create the config row for a company."""
+        if company:
+            config, _ = cls.objects.get_or_create(company=company)
+            return config
+        # Fallback to config with no company (global default)
+        config, _ = cls.objects.get_or_create(company=None)
         return config

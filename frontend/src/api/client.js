@@ -169,3 +169,8 @@ export const notificationsAPI = {
   markAllRead: () => api.post('/notifications/mark_all_read/'),
   getUnreadCount: () => api.get('/notifications/unread_count/'),
 };
+
+// ============ Super Admin ============
+export const superadminAPI = {
+  getDashboard: () => api.get('/core/superadmin/dashboard/'),
+};

@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'corsheaders',
     # Local apps
     'accounts',
-    'core',
+    'core.apps.CoreConfig',
     'carbon',
     'social',
     'governance',
@@ -107,6 +107,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'core.tenancy.TenantFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,

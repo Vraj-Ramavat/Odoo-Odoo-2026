@@ -6,6 +6,7 @@ class User(AbstractUser):
     """Custom User model with role-based access for EcoSphere."""
 
     class Role(models.TextChoices):
+        SUPERADMIN = 'superadmin', 'Super Admin'
         ADMIN = 'admin', 'Admin'
         DEPT_HEAD = 'dept_head', 'Department Head'
         EMPLOYEE = 'employee', 'Employee'
@@ -14,6 +15,13 @@ class User(AbstractUser):
         max_length=20,
         choices=Role.choices,
         default=Role.EMPLOYEE,
+    )
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='users',
     )
     department = models.ForeignKey(
         'core.Department',
@@ -30,6 +38,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.get_full_name() or self.username} ({self.get_role_display()})"
+
+    @property
+    def is_superadmin(self):
+        return self.role == self.Role.SUPERADMIN
 
     @property
     def is_admin_user(self):

@@ -12,6 +12,13 @@ class CSRActivity(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='csr_activities',
+    )
     category = models.ForeignKey(
         'core.Category', null=True, blank=True,
         on_delete=models.SET_NULL, related_name='csr_activities',
@@ -53,6 +60,13 @@ class EmployeeParticipation(models.Model):
         ('rejected', 'Rejected'),
     ]
 
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='csr_participations',
+    )
     activity = models.ForeignKey(
         CSRActivity, on_delete=models.CASCADE, related_name='participations',
     )

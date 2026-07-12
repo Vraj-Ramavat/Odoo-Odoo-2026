@@ -13,6 +13,13 @@ class Notification(models.Model):
         ('reward', 'Reward'),
     ]
 
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+    )
     recipient = models.ForeignKey(
         'accounts.User', on_delete=models.CASCADE, related_name='notifications',
     )

@@ -14,6 +14,13 @@ class Challenge(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='challenges',
+    )
     category = models.ForeignKey(
         'core.Category', null=True, blank=True,
         on_delete=models.SET_NULL, related_name='challenges',
@@ -55,6 +62,13 @@ class ChallengeParticipation(models.Model):
         ('withdrawn', 'Withdrawn'),
     ]
 
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='challenge_participations',
+    )
     challenge = models.ForeignKey(
         Challenge, on_delete=models.CASCADE, related_name='participations',
     )
@@ -83,6 +97,13 @@ class ChallengeParticipation(models.Model):
 
 class EmployeeXP(models.Model):
     """Tracks total XP for an employee."""
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='employee_xps',
+    )
     employee = models.OneToOneField(
         'accounts.User', on_delete=models.CASCADE, related_name='xp_record',
     )
@@ -103,6 +124,13 @@ class Badge(models.Model):
     """Badge with JSON-driven unlock rules."""
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='badges',
+    )
     icon = models.CharField(max_length=50, default='award')  # lucide icon name
     color = models.CharField(max_length=20, default='#10b981')
     unlock_rule = models.JSONField(default=dict, help_text='JSON rule for auto-awarding')
@@ -143,6 +171,13 @@ class Badge(models.Model):
 
 class EmployeeBadge(models.Model):
     """Badge awarded to an employee."""
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='employee_badges',
+    )
     employee = models.ForeignKey(
         'accounts.User', on_delete=models.CASCADE, related_name='badges',
     )
@@ -162,6 +197,13 @@ class Reward(models.Model):
     """Redeemable reward in the ESG reward catalog."""
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='rewards',
+    )
     xp_cost = models.PositiveIntegerField(default=100)
     stock = models.PositiveIntegerField(default=10)
     icon = models.CharField(max_length=50, default='gift')
@@ -177,6 +219,13 @@ class Reward(models.Model):
 
 class RewardRedemption(models.Model):
     """Record of a reward redemption — uses select_for_update() in the view."""
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='reward_redemptions',
+    )
     employee = models.ForeignKey(
         'accounts.User', on_delete=models.CASCADE, related_name='redemptions',
     )
@@ -192,6 +241,13 @@ class RewardRedemption(models.Model):
 
 class DepartmentScore(models.Model):
     """Snapshot-based ESG score per department — never computed live."""
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='department_scores',
+    )
     department = models.ForeignKey(
         'core.Department', on_delete=models.CASCADE, related_name='scores',
     )

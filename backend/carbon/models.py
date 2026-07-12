@@ -15,6 +15,13 @@ class EmissionFactor(models.Model):
     ]
 
     activity_type = models.CharField(max_length=100)  # e.g. "Electricity - Grid", "Diesel - Fleet"
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='emission_factors',
+    )
     scope = models.CharField(max_length=10, choices=SCOPE_CHOICES)
     unit = models.CharField(max_length=30)  # kWh, litre, kg, km
     factor_value = models.DecimalField(max_digits=12, decimal_places=6)  # kgCO2e per unit
@@ -32,16 +39,19 @@ class EmissionFactor(models.Model):
         return f"{self.activity_type} ({self.scope}) — {self.factor_value} kgCO2e/{self.unit} [{status}]"
 
     @classmethod
-    def get_active_factor(cls, activity_type, date=None):
+    def get_active_factor(cls, activity_type, date=None, company=None):
         """Look up the active emission factor for an activity type at a given date."""
         from django.utils import timezone
         if date is None:
             date = timezone.now().date()
-        return cls.objects.filter(
+        qs = cls.objects.filter(
             activity_type=activity_type,
             is_active=True,
             effective_from__lte=date,
-        ).filter(
+        )
+        if company:
+            qs = qs.filter(company=company)
+        return qs.filter(
             models.Q(effective_to__isnull=True) | models.Q(effective_to__gte=date)
         ).order_by('-effective_from').first()
 
@@ -63,6 +73,13 @@ class EnvironmentalGoal(models.Model):
     ]
 
     title = models.CharField(max_length=255)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='environmental_goals',
+    )
     department = models.ForeignKey(
         'core.Department', null=True, blank=True,
         on_delete=models.SET_NULL, related_name='environmental_goals',
@@ -100,6 +117,13 @@ class CarbonTransaction(models.Model):
         ('manual', 'Manual Entry'),
     ]
 
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='carbon_transactions',
+    )
     department = models.ForeignKey(
         'core.Department', on_delete=models.CASCADE,
         related_name='carbon_transactions',

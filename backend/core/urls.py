@@ -9,4 +9,5 @@ router.register(r'categories', views.CategoryViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('config/', views.ESGConfigurationView.as_view(), name='esg-config'),
+    path('superadmin/dashboard/', views.superadmin_dashboard, name='superadmin-dashboard'),
 ]

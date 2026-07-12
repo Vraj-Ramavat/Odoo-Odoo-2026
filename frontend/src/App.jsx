@@ -20,6 +20,7 @@ import Challenges from './pages/Challenges';
 import Leaderboard from './pages/Leaderboard';
 import Rewards from './pages/Rewards';
 import Reports from './pages/Reports';
+import SuperAdmin from './pages/SuperAdmin';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { isAuthenticated, loading, user } = useAuth();
@@ -82,6 +83,7 @@ function AppRoutes() {
         <Route path="departments" element={<ProtectedRoute allowedRoles={['admin']}><Departments /></ProtectedRoute>} />
         <Route path="categories" element={<ProtectedRoute allowedRoles={['admin']}><Categories /></ProtectedRoute>} />
         <Route path="settings" element={<ProtectedRoute allowedRoles={['admin']}><Settings /></ProtectedRoute>} />
+        <Route path="superadmin" element={<ProtectedRoute allowedRoles={['superadmin']}><SuperAdmin /></ProtectedRoute>} />
 
         {/* Environmental (Phase 2) */}
         <Route path="environmental-dashboard" element={<ProtectedRoute allowedRoles={['admin', 'dept_head']}><EnvironmentalDashboard /></ProtectedRoute>} />

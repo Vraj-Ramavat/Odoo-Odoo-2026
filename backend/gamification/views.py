@@ -173,8 +173,10 @@ class DepartmentScoreViewSet(viewsets.ReadOnlyModelViewSet):
 @api_view(['GET'])
 def leaderboard(request):
     """Ranked employee leaderboard by XP."""
+    from core.tenancy import tenant_filter
     dept = request.query_params.get('department')
     qs = EmployeeXP.objects.select_related('employee', 'employee__department').order_by('-total_xp')
+    qs = tenant_filter(request, qs)
     if dept:
         qs = qs.filter(employee__department_id=dept)
     data = EmployeeXPSerializer(qs[:50], many=True).data

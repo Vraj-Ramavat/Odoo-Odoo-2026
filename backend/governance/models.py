@@ -16,6 +16,13 @@ class ESGPolicy(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='policies',
+    )
     document_file = models.FileField(upload_to='policies/', null=True, blank=True)
     category = models.CharField(max_length=50, choices=[
         ('environmental', 'Environmental'), ('social', 'Social'),
@@ -48,6 +55,13 @@ class ESGPolicy(models.Model):
 
 class PolicyAcknowledgement(models.Model):
     """Tracks whether an employee has acknowledged a policy."""
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='policy_acknowledgements',
+    )
     policy = models.ForeignKey(
         ESGPolicy, on_delete=models.CASCADE, related_name='acknowledgements',
     )
@@ -78,6 +92,13 @@ class Audit(models.Model):
     ]
 
     title = models.CharField(max_length=255)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='audits',
+    )
     audit_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='internal')
     department = models.ForeignKey(
         'core.Department', null=True, blank=True,
@@ -115,6 +136,13 @@ class ComplianceIssue(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    company = models.ForeignKey(
+        'core.Company',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='compliance_issues',
+    )
     audit = models.ForeignKey(
         Audit, null=True, blank=True,
         on_delete=models.SET_NULL, related_name='issues',

@@ -1,5 +1,6 @@
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { reportsAPI, carbonAPI, governanceAPI, notificationsAPI } from '../api/client';
 import { TrendingUp, TrendingDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { PageHeader } from '../components/ecosphere/PageHeader';
@@ -22,6 +23,9 @@ import {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  if (user?.role === 'superadmin') {
+    return <Navigate to="/superadmin" replace />;
+  }
   const [stats, setStats] = useState({
     esgScore: 0,
     emissions: '0',

@@ -11,6 +11,7 @@ const navSections = [
     title: 'Overview',
     items: [
       { path: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'dept_head', 'employee'] },
+      { path: '/superadmin', label: 'Super Admin Dashboard', icon: Shield, roles: ['superadmin'] },
     ],
   },
   {

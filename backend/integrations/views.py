@@ -54,8 +54,8 @@ def odoo_webhook(request):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    # Look up active emission factor by activity_type + date
-    factor = EmissionFactor.get_active_factor(data['activity_type'], data['date'])
+    # Look up active emission factor by activity_type + date + company
+    factor = EmissionFactor.get_active_factor(data['activity_type'], data['date'], company=department.company)
     if not factor:
         return Response(
             {'error': f"No active emission factor for '{data['activity_type']}' on {data['date']}"},
@@ -69,6 +69,7 @@ def odoo_webhook(request):
 
     # Create transaction
     txn = CarbonTransaction.objects.create(
+        company=department.company,
         department=department,
         emission_factor=factor,
         source_type=data['source_type'],
