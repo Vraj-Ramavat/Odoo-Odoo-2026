@@ -1,12 +1,27 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Layout() {
   const { user } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return document.documentElement.classList.contains('dark');
+  });
+
+  const toggleTheme = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      setIsDarkMode(true);
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-[var(--bg-primary)] text-foreground">
@@ -33,6 +48,15 @@ export default function Layout() {
 
           {/* Right side */}
           <div className="flex items-center gap-4">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full hover:bg-[var(--g-surface)] text-muted-foreground transition-colors"
+              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {isDarkMode ? <Sun size={20} className="text-[var(--g-yellow)]" /> : <Moon size={20} />}
+            </button>
+
             {/* Notifications bell */}
             <button className="relative p-2 rounded-full hover:bg-[var(--g-surface)] text-muted-foreground transition-colors">
               <Bell size={20} />

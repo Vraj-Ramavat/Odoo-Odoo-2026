@@ -402,3 +402,68 @@
 .toast-info { background: var(--blue); color: white; }
 @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
+
+/* ========================================
+   Dark Mode variables
+   ======================================== */
+.dark {
+  /* Google palette colors overridden for dark mode */
+  --g-blue: #10B981;      /* Emerald Green instead of blue for primary neon accents */
+  --g-green: #34D399;     /* Light Emerald */
+  --g-yellow: #FBBF24;    /* Amber */
+  --g-red: #F87171;       /* Light red */
+  --g-purple: #C084FC;    /* Purple */
+  --g-teal: #22D3EE;      /* Cyan */
+  --g-surface: #0B0F19;   /* Deep obsidian background */
+  --g-search: #1E293B;    /* Slate-800 search box */
+  --g-active: rgba(16, 185, 129, 0.15); /* glowing active green background */
+
+  --background: var(--g-surface);
+  --foreground: #F8FAFC;
+  --card: #151E2E;        /* Dark slate card */
+  --card-foreground: var(--foreground);
+  --primary: var(--g-blue);
+  --primary-foreground: #0B0F19;
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+  --accent: var(--g-active);
+  --accent-foreground: #34D399;
+  --destructive: var(--g-red);
+  --destructive-foreground: #ffffff;
+  --border: #1E293B;      /* Slate-800 border */
+  --input: #1E293B;
+  --ring: var(--g-blue);
+
+  /* Core layout variables mapping */
+  --bg-primary: var(--g-surface);
+  --bg-secondary: #151E2E;
+  --bg-card: #151E2E;
+  --bg-card-hover: #1E293B;
+  --bg-elevated: #1E293B;
+
+  /* Accent - Neon Green/Emerald */
+  --accent-light: #34D399;
+  --accent-dark: #059669;
+  --accent-glow: rgba(52, 211, 153, 0.1);
+
+  /* Secondary accents */
+  --blue: #38BDF8;        /* Sky blue in dark mode */
+  --purple: var(--g-purple);
+  --amber: var(--g-yellow);
+  --rose: var(--g-red);
+  --cyan: var(--g-teal);
+
+  /* Text colors */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  /* Borders & Shadows */
+  --border: #1E293B;
+  --border-hover: #334155;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 12px rgba(16, 185, 129, 0.25);
+}

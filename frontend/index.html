@@ -7,6 +7,16 @@
     <meta name="description" content="EcoSphere — Measure, manage and improve your organization's ESG performance with carbon tracking, gamification, and comprehensive reporting." />
     <meta name="theme-color" content="#0a0f1a" />
     <title>EcoSphere — ESG Management Platform</title>
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
