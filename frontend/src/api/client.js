@@ -168,6 +168,7 @@ export const notificationsAPI = {
   markRead: (id) => api.patch(`/notifications/${id}/read/`),
   markAllRead: () => api.post('/notifications/mark_all_read/'),
   getUnreadCount: () => api.get('/notifications/unread_count/'),
+  delete: (id) => api.delete(`/notifications/${id}/`),
 };
 
 // ============ Super Admin ============

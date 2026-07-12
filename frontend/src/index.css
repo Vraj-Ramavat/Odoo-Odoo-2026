@@ -63,6 +63,12 @@
   --input: #DADCE0;
   --ring: var(--g-blue);
 
+  /* Factor Value & Status Badge customizations */
+  --factor-value-color: #1E293B;
+  --badge-active-bg: #DCFCE7;
+  --badge-active-text: #15803D;
+  --badge-active-border: #86EFAC;
+
   /* Core layout variables mapping */
   --bg-primary: var(--g-surface);
   --bg-secondary: #ffffff;
@@ -271,6 +277,7 @@
   font-size: 14px;
   border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
+  vertical-align: middle;
 }
 .data-table tr {
   transition: background 0.15s ease;
@@ -292,7 +299,11 @@
   font-weight: 600;
   letter-spacing: 0.02em;
 }
-.badge-active { background: rgba(16, 185, 129, 0.15); color: var(--accent-light); }
+.badge-active {
+  background: var(--badge-active-bg);
+  color: var(--badge-active-text);
+  border: 1px solid var(--badge-active-border);
+}
 .badge-inactive { background: rgba(100, 116, 139, 0.15); color: var(--text-muted); }
 .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
 .badge-danger { background: rgba(244, 63, 94, 0.15); color: var(--rose); }
@@ -466,4 +477,10 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 0 12px rgba(16, 185, 129, 0.25);
+
+  /* Factor Value & Status Badge customizations */
+  --factor-value-color: #F8FAFC;
+  --badge-active-bg: rgba(22, 163, 74, 0.2);
+  --badge-active-text: #4ADE80;
+  --badge-active-border: rgba(74, 222, 128, 0.4);
 }

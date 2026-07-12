@@ -114,17 +114,33 @@ export default function EmissionFactors() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-4 mb-6 flex-wrap">
-        <div className="relative w-72">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
-          <input type="text" className="form-input pl-10 py-2.5 text-sm"
-            placeholder="Search factors..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      <div className="flex items-center gap-4 mb-6 flex-wrap p-3 rounded-2xl border border-border shadow-sm" style={{ backgroundColor: 'var(--card)' }}>
+        <div className="relative w-80 flex items-center">
+          <Search size={18} className="absolute left-4 pointer-events-none" style={{ color: 'var(--text-muted)' }} />
+          <input 
+            type="text" 
+            className="w-full text-sm outline-none transition-all"
+            placeholder="Search emission factors..." 
+            value={search} 
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              height: '48px',
+              borderRadius: '12px',
+              paddingLeft: '44px',
+              paddingRight: '16px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-primary)',
+            }}
+          />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           {[{ value: '', label: 'All Scopes' }, { value: '1', label: 'Scope 1' },
             { value: '2', label: 'Scope 2' }, { value: '3', label: 'Scope 3' }].map(opt => (
             <button key={opt.value} className="btn btn-sm"
               style={{
+                height: '48px',
+                borderRadius: '12px',
                 background: filterScope === opt.value ? 'var(--accent-glow)' : 'var(--bg-card)',
                 color: filterScope === opt.value ? 'var(--accent-light)' : 'var(--text-secondary)',
                 border: `1px solid ${filterScope === opt.value ? 'var(--accent)' : 'var(--border)'}`,
@@ -134,9 +150,10 @@ export default function EmissionFactors() {
             </button>
           ))}
         </div>
-        <label className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
+        <label className="flex items-center gap-2 text-sm cursor-pointer select-none" style={{ color: 'var(--text-secondary)', height: '48px' }}>
           <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)}
-            className="rounded" /> Show retired
+            className="w-4 h-4 rounded border-border" />
+          <span>Show retired</span>
         </label>
       </div>
 
@@ -152,13 +169,13 @@ export default function EmissionFactors() {
             <thead>
               <tr>
                 <th>Activity Type</th>
-                <th>Scope</th>
+                <th style={{ textAlign: 'center' }}>Scope</th>
                 <th>Factor Value</th>
                 <th>Unit</th>
                 <th>Source</th>
                 <th>Effective From</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'right' }}>Actions</th>
+                <th style={{ textAlign: 'center' }}>Status</th>
+                <th style={{ textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -169,12 +186,12 @@ export default function EmissionFactors() {
                 return (
                   <tr key={f.id} style={{ opacity: f.is_active ? 1 : 0.5 }}>
                     <td><span className="font-medium" style={{ color: 'var(--text-primary)' }}>{f.activity_type}</span></td>
-                    <td>
-                      <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ background: sc.bg, color: sc.color }}>
+                    <td className="align-middle text-center">
+                      <span className="inline-flex items-center justify-center text-xs px-3 py-1 rounded-full font-semibold min-w-[80px]" style={{ background: sc.bg, color: sc.color, height: '24px' }}>
                         {sc.label}
                       </span>
                     </td>
-                    <td><span className="font-mono font-semibold" style={{ color: 'var(--accent-light)' }}>{f.factor_value}</span></td>
+                    <td><span className="font-mono font-semibold" style={{ color: 'var(--factor-value-color)' }}>{f.factor_value}</span></td>
                     <td style={{ color: 'var(--text-secondary)' }}>kgCO2e / {f.unit}</td>
                     <td style={{ color: 'var(--text-muted)' }}>{f.source || '--'}</td>
                     <td style={{ color: 'var(--text-secondary)' }}>
@@ -183,15 +200,15 @@ export default function EmissionFactors() {
                       </div>
                       {f.effective_to && <div className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>to {f.effective_to}</div>}
                     </td>
-                    <td>
+                    <td className="align-middle text-center">
                       {f.is_active ? (
                         <span className="badge badge-active"><CheckCircle size={12} /> Active</span>
                       ) : (
                         <span className="badge badge-inactive"><XCircle size={12} /> Retired</span>
                       )}
                     </td>
-                    <td>
-                      <div className="flex items-center justify-end gap-1">
+                    <td className="align-middle text-center">
+                      <div className="flex items-center justify-center gap-1">
                         {f.is_active && (
                           <button className="btn btn-ghost btn-sm" onClick={() => openEdit(f)}><Pencil size={14} /></button>
                         )}
