@@ -1,12 +1,12 @@
 import React from 'react';
 
 const map = {
-  blue: "bg-[color-mix(in_oklab,var(--g-blue)_14%,white)] text-[var(--g-blue)]",
-  green: "bg-[color-mix(in_oklab,var(--g-green)_14%,white)] text-[var(--g-green)]",
-  yellow: "bg-[color-mix(in_oklab,var(--g-yellow)_18%,white)] text-[color-mix(in_oklab,var(--g-yellow)_60%,black)]",
-  red: "bg-[color-mix(in_oklab,var(--g-red)_14%,white)] text-[var(--g-red)]",
-  purple: "bg-[color-mix(in_oklab,var(--g-purple)_14%,white)] text-[var(--g-purple)]",
-  teal: "bg-[color-mix(in_oklab,var(--g-teal)_18%,white)] text-[color-mix(in_oklab,var(--g-teal)_60%,black)]",
+  blue: "bg-[color-mix(in_oklab,var(--g-blue)_14%,transparent)] text-[var(--g-blue)]",
+  green: "bg-[color-mix(in_oklab,var(--g-green)_14%,transparent)] text-[var(--g-green)]",
+  yellow: "bg-[color-mix(in_oklab,var(--g-yellow)_18%,transparent)] text-[var(--g-yellow)]",
+  red: "bg-[color-mix(in_oklab,var(--g-red)_14%,transparent)] text-[var(--g-red)]",
+  purple: "bg-[color-mix(in_oklab,var(--g-purple)_14%,transparent)] text-[var(--g-purple)]",
+  teal: "bg-[color-mix(in_oklab,var(--g-teal)_18%,transparent)] text-[var(--g-teal)]",
   grey: "bg-muted text-muted-foreground",
 };
 

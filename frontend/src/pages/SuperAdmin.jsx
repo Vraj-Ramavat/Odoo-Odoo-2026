@@ -63,7 +63,7 @@ export default function SuperAdmin() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
         <GCard className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-blue)_10%,white)] text-[var(--g-blue)]">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-blue)_10%,transparent)] text-[var(--g-blue)]">
             <Building2 size={24} />
           </div>
           <div>
@@ -73,7 +73,7 @@ export default function SuperAdmin() {
         </GCard>
 
         <GCard className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-purple)_10%,white)] text-[var(--g-purple)]">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-purple)_10%,transparent)] text-[var(--g-purple)]">
             <Users size={24} />
           </div>
           <div>
@@ -83,7 +83,7 @@ export default function SuperAdmin() {
         </GCard>
 
         <GCard className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-teal)_10%,white)] text-[var(--g-teal)]">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-teal)_10%,transparent)] text-[var(--g-teal)]">
             <FolderTree size={24} />
           </div>
           <div>
@@ -93,7 +93,7 @@ export default function SuperAdmin() {
         </GCard>
 
         <GCard className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-red)_10%,white)] text-[var(--g-red)]">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[color-mix(in_oklab,var(--g-red)_10%,transparent)] text-[var(--g-red)]">
             <Flame size={24} />
           </div>
           <div>
@@ -111,7 +111,7 @@ export default function SuperAdmin() {
               <h3 className="font-semibold text-foreground">Global Weekly Emissions Trend</h3>
               <p className="text-xs text-muted-foreground mt-0.5">Aggregated carbon footprint output across all tenant companies.</p>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-[var(--g-green)] bg-[color-mix(in_oklab,var(--g-green)_10%,white)] px-2 py-1 rounded-md font-medium">
+            <div className="flex items-center gap-1.5 text-xs text-[var(--g-green)] bg-[color-mix(in_oklab,var(--g-green)_10%,transparent)] px-2 py-1 rounded-md font-medium">
               <TrendingUp size={14} />
               <span>Real-time Sync</span>
             </div>
@@ -221,7 +221,7 @@ export default function SuperAdmin() {
                   <td className="py-3 px-5 text-right font-medium">{c.total_emissions_kgco2e.toLocaleString()} kg</td>
                   <td className="py-3 px-5 text-center">
                     {c.open_issues_count > 0 ? (
-                      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium bg-[color-mix(in_oklab,var(--g-red)_10%,white)] text-[var(--g-red)]">
+                      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium bg-[color-mix(in_oklab,var(--g-red)_10%,transparent)] text-[var(--g-red)]">
                         <ShieldAlert size={12} />
                         {c.open_issues_count} Active
                       </span>

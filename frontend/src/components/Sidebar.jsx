@@ -170,7 +170,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           <div className="mt-2 rounded-lg p-1 bg-card border border-border shadow-md">
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-[var(--g-red)] hover:bg-[color-mix(in_oklab,var(--g-red)_10%,white)] transition-colors"
+              className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-[var(--g-red)] hover:bg-[color-mix(in_oklab,var(--g-red)_10%,var(--bg-primary))] transition-colors"
             >
               <LogOut size={16} />
               <span>Sign Out</span>

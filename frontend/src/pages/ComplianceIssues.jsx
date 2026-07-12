@@ -119,7 +119,7 @@ export default function ComplianceIssues() {
             </thead>
             <tbody>
               {issues.map(i => (
-                <tr key={i.id} className={`border-b border-border last:border-0 hover:bg-[var(--g-surface)] transition-colors ${i.is_overdue ? 'bg-[color-mix(in_oklab,var(--g-red)_5%,white)]' : ''}`} style={i.is_overdue ? { boxShadow: 'inset 3px 0 0 0 var(--g-red)' } : undefined}>
+                <tr key={i.id} className={`border-b border-border last:border-0 hover:bg-[var(--g-surface)] transition-colors ${i.is_overdue ? 'bg-[color-mix(in_oklab,var(--g-red)_8%,var(--bg-primary))]' : ''}`} style={i.is_overdue ? { boxShadow: 'inset 3px 0 0 0 var(--g-red)' } : undefined}>
                   <td className="py-3 pl-5 pr-2">
                     <div className="font-semibold text-foreground">{i.title}</div>
                     {i.audit_title && <div className="text-xs text-muted-foreground mt-0.5">Audit: {i.audit_title}</div>}
