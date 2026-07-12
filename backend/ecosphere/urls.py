@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/gamification/', include('gamification.urls')),
     path('api/reports/', include('reports.urls')),
     path('api/notifications/', include('notifications.urls')),
+    path('api/integrations/', include('integrations.urls')),
 ]
 
 if settings.DEBUG:

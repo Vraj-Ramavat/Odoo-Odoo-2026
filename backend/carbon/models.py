@@ -132,7 +132,8 @@ class CarbonTransaction(models.Model):
         if self.emission_factor_id:
             from decimal import Decimal
             qty = Decimal(str(self.activity_quantity))
-            self.calculated_emissions_kgco2e = qty * self.emission_factor.factor_value
+            fv = Decimal(str(self.emission_factor.factor_value))
+            self.calculated_emissions_kgco2e = qty * fv
         super().save(*args, **kwargs)
 
 

@@ -69,7 +69,7 @@ def auto_create_carbon_transaction(sender, instance, created, **kwargs):
         source_reference_id=source_ref,
         description=f"Auto: {instance.description}",
         activity_quantity=instance.quantity,
-        calculated_emissions_kgco2e=Decimal(str(instance.quantity)) * factor.factor_value,
+        calculated_emissions_kgco2e=Decimal(str(instance.quantity)) * Decimal(str(factor.factor_value)),
         transaction_date=instance.date,
         is_auto_calculated=True,
     )
