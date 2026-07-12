@@ -31,7 +31,9 @@ export default function Login() {
       <div
         className="hidden lg:flex flex-col justify-between w-[480px] p-12 relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #1A73E8 0%, #1557b0 100%)',
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)), url("/login-bg.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         {/* Decorative circles */}
