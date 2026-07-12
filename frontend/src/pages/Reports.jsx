@@ -32,11 +32,11 @@ export default function Reports() {
   const downloadCSV = async (type) => {
     try {
       const fetcher = { environmental: reportsAPI.getEnvironmental, social: reportsAPI.getSocial, governance: reportsAPI.getGovernance, summary: reportsAPI.getSummary };
-      const res = await fetcher[type]({ format: 'csv' });
+      const res = await fetcher[type]({ format: 'csv' }, { responseType: 'blob' });
       const blob = new Blob([res.data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `${type}_report.csv`; a.click();
-    } catch (e) { alert('Error downloading'); }
+    } catch (e) { console.error('CSV Download failed:', e); alert('Error downloading'); }
   };
 
   const generateCustom = async () => {
@@ -169,9 +169,18 @@ export default function Reports() {
           <button className="btn btn-primary" onClick={generateCustom}>Generate Custom</button>
           {customData && (
             <button className="btn btn-secondary" onClick={async () => {
-              const res = await reportsAPI.getCustom({ module: customModule, format: 'csv' });
-              const blob = new Blob([res.data], { type: 'text/csv' });
-              const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `custom_${customModule}.csv`; a.click();
+              try {
+                const res = await reportsAPI.getCustom({ module: customModule, format: 'csv' }, { responseType: 'blob' });
+                const blob = new Blob([res.data], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob); 
+                const a = document.createElement('a'); 
+                a.href = url; 
+                a.download = `custom_${customModule}.csv`; 
+                a.click();
+              } catch (e) {
+                console.error('Custom CSV Download failed:', e);
+                alert('Error downloading custom CSV');
+              }
             }}>Download CSV ↓</button>
           )}
         </div>

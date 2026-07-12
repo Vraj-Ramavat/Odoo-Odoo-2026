@@ -155,11 +155,11 @@ export const gamificationAPI = {
 
 // ============ Reports ============
 export const reportsAPI = {
-  getEnvironmental: (params) => api.get('/reports/environmental/', { params }),
-  getSocial: (params) => api.get('/reports/social/', { params }),
-  getGovernance: (params) => api.get('/reports/governance/', { params }),
-  getSummary: (params) => api.get('/reports/summary/', { params }),
-  getCustom: (params) => api.get('/reports/custom/', { params }),
+  getEnvironmental: (params, config) => api.get('/reports/environmental/', { params, ...config }),
+  getSocial: (params, config) => api.get('/reports/social/', { params, ...config }),
+  getGovernance: (params, config) => api.get('/reports/governance/', { params, ...config }),
+  getSummary: (params, config) => api.get('/reports/summary/', { params, ...config }),
+  getCustom: (params, config) => api.get('/reports/custom/', { params, ...config }),
 };
 
 // ============ Notifications ============
