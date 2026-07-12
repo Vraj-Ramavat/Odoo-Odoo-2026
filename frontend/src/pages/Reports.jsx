@@ -32,7 +32,7 @@ export default function Reports() {
   const downloadCSV = async (type) => {
     try {
       const fetcher = { environmental: reportsAPI.getEnvironmental, social: reportsAPI.getSocial, governance: reportsAPI.getGovernance, summary: reportsAPI.getSummary };
-      const res = await fetcher[type]({ format: 'csv' }, { responseType: 'blob' });
+      const res = await fetcher[type]({ export: 'csv' }, { responseType: 'blob' });
       const blob = new Blob([res.data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `${type}_report.csv`; a.click();
@@ -170,7 +170,7 @@ export default function Reports() {
           {customData && (
             <button className="btn btn-secondary" onClick={async () => {
               try {
-                const res = await reportsAPI.getCustom({ module: customModule, format: 'csv' }, { responseType: 'blob' });
+                const res = await reportsAPI.getCustom({ module: customModule, export: 'csv' }, { responseType: 'blob' });
                 const blob = new Blob([res.data], { type: 'text/csv' });
                 const url = URL.createObjectURL(blob); 
                 const a = document.createElement('a'); 

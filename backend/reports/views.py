@@ -26,7 +26,7 @@ def environmental_report(request):
     """Environmental report data — emissions by scope, department, trend."""
     days = int(request.query_params.get('days', 365))
     dept = request.query_params.get('department')
-    fmt = request.query_params.get('format', 'json')
+    export = request.query_params.get('export', 'json')
     since = date.today() - timedelta(days=days)
 
     qs = CarbonTransaction.objects.filter(transaction_date__gte=since)
@@ -59,7 +59,7 @@ def environmental_report(request):
         'goals_summary': goals,
     }
 
-    if fmt == 'csv':
+    if export == 'csv':
         return _export_csv('environmental_report', ['Department', 'Emissions (kgCO2e)', 'Transactions'],
                            [(d['department__name'], str(d['emissions']), d['count']) for d in by_dept])
     return Response(data)
@@ -68,7 +68,7 @@ def environmental_report(request):
 @api_view(['GET'])
 def social_report(request):
     """Social report — CSR activities, participation, diversity."""
-    fmt = request.query_params.get('format', 'json')
+    export = request.query_params.get('export', 'json')
 
     activities = tenant_filter(request, CSRActivity.objects.all())
     participations = tenant_filter(request, EmployeeParticipation.objects.all())
@@ -91,7 +91,7 @@ def social_report(request):
             count=Count('id')).order_by('-count')),
     }
 
-    if fmt == 'csv':
+    if export == 'csv':
         rows = [(d['department__name'] or 'Org-wide', d['count'])
                 for d in data['by_department']]
         return _export_csv('social_report', ['Department', 'Activities'], rows)
@@ -101,7 +101,7 @@ def social_report(request):
 @api_view(['GET'])
 def governance_report(request):
     """Governance report — policies, audits, compliance."""
-    fmt = request.query_params.get('format', 'json')
+    export = request.query_params.get('export', 'json')
 
     policies = tenant_filter(request, ESGPolicy.objects.filter(status='active'))
     issues = tenant_filter(request, ComplianceIssue.objects.all())
@@ -135,7 +135,7 @@ def governance_report(request):
         'issues_by_status': list(issues.values('status').annotate(count=Count('id'))),
     }
 
-    if fmt == 'csv':
+    if export == 'csv':
         rows = [(p['title'], p['category'], p['acknowledged'], p['total'], f"{p['rate']}%")
                 for p in policy_stats]
         return _export_csv('governance_report',
@@ -146,7 +146,7 @@ def governance_report(request):
 @api_view(['GET'])
 def summary_report(request):
     """ESG Summary — combined dashboard data."""
-    fmt = request.query_params.get('format', 'json')
+    export = request.query_params.get('export', 'json')
 
     scores_qs = tenant_filter(request, DepartmentScore.objects.all())
     scores = scores_qs.order_by('-period', 'department')[:20]
@@ -177,7 +177,7 @@ def summary_report(request):
         },
     }
 
-    if fmt == 'csv':
+    if export == 'csv':
         rows = [(d['department'], d['environmental'], d['social'],
                  d['governance'], d['total'], d['period'])
                 for d in data['department_scores']]
@@ -194,7 +194,7 @@ def custom_report(request):
     dept = request.query_params.get('department')
     start_date = request.query_params.get('start_date')
     end_date = request.query_params.get('end_date')
-    fmt = request.query_params.get('format', 'json')
+    export = request.query_params.get('export', 'json')
 
     if module == 'environmental':
         qs = tenant_filter(request, CarbonTransaction.objects.all())
@@ -210,7 +210,7 @@ def custom_report(request):
             'calculated_emissions_kgco2e', 'transaction_date',
             'is_auto_calculated',
         ).order_by('-transaction_date')[:200])
-        if fmt == 'csv':
+        if export == 'csv':
             return _export_csv('custom_environmental',
                                ['Department', 'Activity', 'Scope', 'Quantity', 'Emissions', 'Date', 'Auto'],
                                [(r['department__name'], r['emission_factor__activity_type'],
@@ -226,7 +226,7 @@ def custom_report(request):
             qs = qs.filter(department_id=dept)
         rows = list(qs.values('title', 'department__name', 'status',
                               'start_date', 'end_date', 'location'))
-        if fmt == 'csv':
+        if export == 'csv':
             return _export_csv('custom_social',
                                ['Title', 'Department', 'Status', 'Start', 'End', 'Location'],
                                [(r['title'], r['department__name'] or '', r['status'],
@@ -240,7 +240,7 @@ def custom_report(request):
             qs = qs.filter(department_id=dept)
         rows = list(qs.values('title', 'department__name', 'severity',
                               'status', 'due_date', 'is_overdue'))
-        if fmt == 'csv':
+        if export == 'csv':
             return _export_csv('custom_governance',
                                ['Title', 'Department', 'Severity', 'Status', 'Due Date', 'Overdue'],
                                [(r['title'], r['department__name'] or '', r['severity'],
